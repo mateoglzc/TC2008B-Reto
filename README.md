@@ -1,18 +1,18 @@
 # TC2008B-Reto
 
-Equipo:
+## Equipo
 - Mateo González Cosío (A01023938)
 - Enrique Mondelli (A01379363)
 - Diego Mejía (A01024228)
 
-Fortalezas y áreas de oportunidad:
+## Fortalezas y áreas de oportunidad
 - *Mateo:* 
 
 - *Enrique:*
 
 - *Diego:*
 
-Expectativas:
+## Expectativas
 - *Mateo:* 
 
 - *Enrique:*
