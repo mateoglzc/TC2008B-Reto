@@ -6,7 +6,7 @@
 - Diego Mejía (A01024228)
 
 ## Fortalezas y áreas de oportunidad
-- *Mateo:* 
+- *Mateo:*  
 
 - *Enrique:*
 
@@ -18,3 +18,11 @@
 - *Enrique:*
 
 - *Diego:*
+
+## Descripción del reto
+
+## Identificación de agentes involucrados
+
+## Plan de trabajo
+
+## Aprendizaje adquirido
