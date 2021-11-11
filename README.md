@@ -7,7 +7,7 @@ Equipo:
 
 ## Fortalezas y áreas de oportunidad
 
-- **Mateo:** Mi princiapal fortaleza es la programación en Python ya que es el lenguaje con el que mas familiarizado estoy. Al igual me considero una persona bastante flexible, lo que me permite adaptarme facilmente a diferentes estilos de trabajo y aprender nuevas herramientas con facilidad. Otra fortaleza que se me hace relevante es la comunicación efectiva que tengo con los integrantes del equipo. Dentro de mis areas de oportunidad 
+- **Mateo:** Mi princiapal fortaleza es la programación en Python ya que es el lenguaje con el que mas familiarizado estoy. Al igual me considero una persona bastante flexible, lo que me permite adaptarme facilmente a diferentes estilos de trabajo y aprender nuevas herramientas con facilidad. Otra fortaleza que se me hace relevante es la comunicación efectiva que tengo con los integrantes del equipo. Dentro de mis areas de oportunidad se encuentra mejorar mis habilidades con Unity y C#, ya que aunque ya los he utilizado previamente, no tengo la experiencia necesaria para lo que nos pide el proyecto. 
 
 - **Enrique:** En mi opinion, mis fortalezas son la programacion en python, ya que es el lenguaje que mas tiempo he usado, ademas me considero una persona flexible a estilos de trabajo por lo cual me hace bueno al colaborar con integrantes de mi equipo. Un area de oportunidad es mi nivel de conocimiento de C# especificamente en Unity ya que no tengo mucha experiencia con esta herramienta. Otra area de oportunidad es el manejo de aplicaciones en la nube porque no he tenido muchas oportunidades para deployear cosas a la nube.
 
@@ -15,7 +15,7 @@ Equipo:
 
 ## Expectativas
 
-- **Mateo:**  Mi mayor expectativa de este bloque es conocer a fondo las base de los temas que se tocaran durante el transcurso del curso del bloque. Con esto poder obtener una 
+- **Mateo:**  Mi mayor expectativa de este bloque es conocer a fondo las base de los temas que se tocaran durante el transcurso del curso del bloque. Con esto poder obtener una buena base de conocimiento que me permita adentrarme a cada area de estudio con mas facilidad. Al igual, una de mis gran expectativas es poder llevar el proyecto de una manera ordenada, lo cual nos permitira llegar al objetivo final sin problema alguno. Digo esto, ya que en bloques pasados hemos tenido problema siguiendo una estructura de trabajo.
 
 - **Enrique:** En el transcurso del bloque espero poder desarrollar mis conocimientos en el area de Inteligencia Artificial, ya que es una de las areas que considero de mayor interes. Tambien espero aprender las bases sobre graficas computaiconales para poder generar una visualizacion adecuada del modelo multiagentes que se desarrollara. Ademas de esto espero poder aprender a usar herramientas como la nube para poder hostear la aplicacion creada para la solucion del reto, pero tambien para futuros proyectos, ya sean personales y professionales, que requieran de este tipo de servicio.
 
@@ -55,12 +55,6 @@ Para esto, es necesario implementar una simulación de sistemas multiagentes de 
 ## Identificación de agentes involucrados
 
 - Car
-- Road
-- Side Walk
-- Pedestrian
-- Traffic light
-- Stop sign
-- Speed limit sign
 
 ## Plan de trabajo
 
