@@ -5,16 +5,24 @@ Equipo:
 - Enrique Mondelli - A01379363
 - Mateo González Cosío - A01023938
 
-Fortalezas y áreas de oportunidad:
+## Fortalezas y áreas de oportunidad
+- *Mateo:*  
+
+- *Enrique:*
+
+- *Diego:*
+
+## Expectativas
 - *Mateo:* 
 
 - *Enrique:*
 
 - *Diego:*
 
-Expectativas:
-- *Mateo:* 
+## Descripción del reto
 
-- *Enrique:*
+## Identificación de agentes involucrados
 
-- *Diego:*
+## Plan de trabajo
+
+## Aprendizaje adquirido
