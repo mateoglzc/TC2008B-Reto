@@ -54,9 +54,68 @@ Para esto, es necesario implementar una simulación de sistemas multiagentes de 
 
 ## Identificación de agentes involucrados
 
-- Car
+- **Principal agente:** Automóvil 
+- **Descripción:** A pesar de que en ejemplos pasados se han hecho uso de diversos agentes que solo tienen la funcionalidad de existir en el modelo con ciertas propiedades, el único agente que realiza las interacciones y decisiones reactivas es el agente que representa un automóvil.
+- **Relaciones**: Van a existir varias instancias de este agente en el modelo. Estas instancias se van a tener que comunicar entre ellas para prevenir colisiones, por lo cual van a contar con un sistema de luces intermitentes para comunicar sus futuros pasos a vehiculos cercanos. Además de esto, van a tener acciones reactivas a su entorno, por ejemplo, detenerse si hay un automovil entfrente, detenerse en semaforos con luz roja, avanzar cuando el semaforo cambia a luz verde.
+- **Variables de desempeño:**
+  - si llega a su destino
+  - número de colisiones
+  - tiempo en llegar al destino
+  - velocidad promedio
 
 ## Plan de trabajo
 
+El equipo de trabajo estableció que el plan de trabajo hará uso de la metodología AGILE. Dicha metodología tiene la fundación de realizar ciclos en disntintas etapas del proyecto hasta que el equipo de trabajo decida que el producto este listo para su lanzamieto y posible publicación.
 
-## Aprendizaje adquirido
+Las etapas fuera del ciclo son la planeación y el lanzamiento del proyecto, y por dentro de los ciclos se encuentran; el diseño, desarrollo, pruebas, despliegue y revisión.
+
+### Actividades 
+
+- [x] **Configuración de repositorio**
+  - **Descripción:** crear el repositorio con todas las carpetas y archivos necesarios
+  - **Lapso de tiempo**: 11/11/2021 - 11/11/2021
+  - **Fecha esperada:** 11/11/2021
+  - **Responsable/s:** Equipo de trabajo
+  - **Intervalo de esfuerzo estimado:** Bajo
+
+- [ ] **Definición de modelo**
+  - **Descripción:** establecer el modelo del sistema multiagente a implementar
+  - **Lapso de tiempo**: 12/11/2021 - 16/11/2021
+  - **Fecha esperada:** 16/11/2021
+  - **Responsable/s:** Equipo de trabajo
+  - **Intervalo de esfuerzo estimado:** Intermedio
+
+- [ ] **Desarrollo de sistema multiagente**
+  - **Descripción:** construcción del modelo con los respectivos agentes reactivos
+  - **Lapso de tiempo**: 17/11/2021 - 26/11/2021
+  - **Fecha esperada:** 26/11/2021
+  - **Responsable/s:** Diego, Enrique
+  - **Intervalo de esfuerzo estimado:** Alto
+
+- [ ] **Implementación de la nube**
+  - **Descripción:** Conexión del modelo hacia una liga en la nube
+  - **Lapso de tiempo**: 17/11/2021 - 26/11/2021
+  - **Fecha esperada:** 26/11/2021
+  - **Responsable/s:** Enrique, Mateo
+  - **Intervalo de esfuerzo estimado:** Intermedio
+
+- [ ] **Visualización de Unity**
+  - **Descripción:** Aplicar gráficas computacionales para la visualización de la simulación
+  - **Lapso de tiempo**: 22/11/2021 - 26/11/2021
+  - **Fecha esperada:** 30/11/2021
+  - **Responsable/s:** Diego, Mateo
+  - **Intervalo de esfuerzo estimado:** Alto
+
+## Aprendizajes adquiridos
+
+- Nueva perspectiva sobre la inteligencia artificial y sus implicaciones en la vida real
+- Diferentes tipos sistemas inteligentes que pueden actuar o pensar como humanos o racionalmente 
+- Racionalidad y sus distintats características en relación a la inteligencia artificial
+- Distintas arquitecturas de agentes y sus distintas metodologías
+- Diferentes objetivos y caminos utilizados por agentes que impactan su ambiente
+- Implementación de modelo multiagentes a través de Python
+- Transformaciones de figuras 3D a través de sus vectores
+- Matemáticas involucradas en las transformaciones de figuras
+- Modelación de figuras 3D a través de herramientas computacionales
+- Uso de Unity y C# para la modelación y movimiento de figuras 3D
+- Iluminación en un ambiente 3D y sus interacciones con distintas superficies
