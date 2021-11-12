@@ -108,12 +108,17 @@ Las etapas fuera del ciclo son la planeación y el lanzamiento del proyecto, y p
 
 ## Aprendizajes adquiridos
 
+### Sistemas multiagentes
+
 - Nueva perspectiva sobre la inteligencia artificial y sus implicaciones en la vida real
 - Diferentes tipos sistemas inteligentes que pueden actuar o pensar como humanos o racionalmente 
 - Racionalidad y sus distintats características en relación a la inteligencia artificial
 - Distintas arquitecturas de agentes y sus distintas metodologías
 - Diferentes objetivos y caminos utilizados por agentes que impactan su ambiente
 - Implementación de modelo multiagentes a través de Python
+
+### Gráficas computacionales
+
 - Transformaciones de figuras 3D a través de sus vectores
 - Matemáticas involucradas en las transformaciones de figuras
 - Modelación de figuras 3D a través de herramientas computacionales
