@@ -1,12 +1,12 @@
-from flask import Flask
-from flask import render_template, url_for, redirect, jsonify, request
+from flask import Flask, jsonify
+# from flask import render_template, url_for, redirect, jsonify, request
 import random
 
 app = Flask("Wall-E API")
 app.config['SECRET_KEY'] = "peepeePooPoo"
 
 def makePoint() -> dict:
-    return {"x" : random.randint(0, 50), "y" : random.randint(0, 50), "z" : 0}
+    return {"x" : random.randint(0, 50), "y" : 0, "z" : random.randint(0, 50)}
 
 posAgents = []
 carryBox = []

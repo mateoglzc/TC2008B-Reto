@@ -55,14 +55,21 @@ public class API : MonoBehaviour
     [SerializeField] string configTP;
     [SerializeField] string updateTP;
     [SerializeField] int numAgents;
+    [SerializeField] GameObject catBoy;
 
     Agent[] agents;
+
+    GameObject[] agentGroup;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(GetAgents());
         StartCoroutine(SendConfiguration());
+
+        agentGroup = new GameObject[numAgents];
+
+        StartCoroutine(GetAgents());
+
     }
 
     // Update is called once per frame
@@ -80,6 +87,13 @@ public class API : MonoBehaviour
         {
             Debug.Log(www.downloadHandler.text);
             agents = JsonHelper.FromJson<Agent>(www.downloadHandler.text);
+            for (int i = 0; i < numAgents; i++)
+            {
+                Vector3 temp = new Vector3(agents[i].x, agents[i].y, agents[i].z);
+                agentGroup[i] = Instantiate(catBoy, temp, Quaternion.identity);
+                var x = agentGroup[i].transform.GetChild(1).GetComponent<MeshRenderer>().bounds;
+                Debug.Log(x);
+            }
         }else
         {
             Debug.Log(www.error);
