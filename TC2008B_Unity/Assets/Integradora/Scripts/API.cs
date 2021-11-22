@@ -11,6 +11,8 @@ public class Agent
     public int y;
     public int z;
 
+    public int rotation_degrees;
+
     public void print()
     {
         Debug.Log(x);

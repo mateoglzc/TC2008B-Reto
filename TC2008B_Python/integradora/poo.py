@@ -5,8 +5,10 @@ import random
 app = Flask("Wall-E API")
 app.config['SECRET_KEY'] = "peepeePooPoo"
 
-def makePoint() -> dict:
-    return {"x" : random.randint(0, 50), "y" : 0, "z" : random.randint(0, 50)}
+def makeJson() -> dict:
+    return {"x" : random.randint(0, 50),
+            "y" : 0, 
+            "z" : random.randint(0, 50)}
 
 posAgents = []
 carryBox = []
@@ -33,9 +35,14 @@ def config():
     print("Message Received")
     return "Message Received"
 
-@app.route("/update", methods=["GET"])
+@app.route("/getAgents", methods=["GET"])
 def update():
     """Send Agent Information"""
+    return jsonify({"Items" : posAgents})
+
+@app.route("/getBoxes", methods=["GET"])
+def update():
+    """Send Box Information"""
     return jsonify({"Items" : posAgents})
 
 
