@@ -79,7 +79,7 @@ class WarehouseModel(Model):
     
     def changeBoxDst(self):
         newBoxDst = random.choice(self.grid.get_cell_list_contents([self.boxDst])[0].realNeighbors)
-        while len(newBoxDst.realNeighbors) == 0 and newBoxDst.pos in self.prevDsts:
+        while len(newBoxDst.realNeighbors) == 0 or newBoxDst.pos in self.prevDsts:
            newBoxDst = random.choice(self.grid.get_cell_list_contents([self.boxDst])[0].realNeighbors)
         
 
