@@ -1,13 +1,15 @@
-from model import WarehouseModel, RobotAgent, BoxAgent, BoxDestination
+from random import randint
+from model import WarehouseModel, RobotAgent, BoxAgent, BoxDestination, TileAgent
 from mesa.visualization.modules import CanvasGrid, PieChartModule, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
 
+
 def agent_portrayal(agent):
     """Function that defines how each Agent is going to be portrayed visualy"""
     portrayal = {"Shape": "circle",
-                 "Filled": "true",
+                 "Filled": True,
                  "Layer": 0}
 
     if isinstance(agent, RobotAgent):
@@ -31,6 +33,9 @@ def agent_portrayal(agent):
         portrayal["w"] = 0.9
         portrayal["h"] = 0.9
     
+    if isinstance(agent, TileAgent):
+        portrayal["Filled"] = False
+    
 
     return portrayal
 
@@ -38,11 +43,21 @@ def agent_portrayal(agent):
 modelParams = {
     "width": 10,
     "height": 10,
+    "seed": UserSettableParameter("slider",
+                                        name="Seed",
+                                        value=5,
+                                        min_value=1,
+                                        max_value=1000),
     "numBoxes": UserSettableParameter("slider",
                                         name="Number of Boxes",
                                         value=5,
                                         min_value=1,
-                                        max_value=10)}
+                                        max_value=30),
+    "numRobots": UserSettableParameter("slider",
+                                        name="Number of Robots",
+                                        value=1,
+                                        min_value=1,
+                                        max_value=5)}
 
 grid = CanvasGrid(agent_portrayal, modelParams["width"], modelParams["height"], 500, 500)
 

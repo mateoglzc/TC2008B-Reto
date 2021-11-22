@@ -1,12 +1,21 @@
 from mesa import Agent
-
 from collections import defaultdict
-import random
+from queue import PriorityQueue
+
+""" Things to fix:
+    - 2 or more robots move into the same cell
+"""
+
+
+def h(src, dst):
+    x1, y1 = src
+    x2, y2 = dst 
+    return abs(x1 - x2) + abs(y1 - y2)
+
 
 class BoxAgent(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.prevDsts = []
 
 class WallAgent(Agent):
     def __init__(self, unique_id, model):
@@ -15,6 +24,7 @@ class WallAgent(Agent):
 class TileAgent(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
+        self.realNeighbors = []
 
 class BoxDestination(Agent):
     def __init__(self, unique_id, model):
@@ -35,69 +45,95 @@ class RobotAgent(Agent):
     def __init__(self, unique_id, model, boxDst):
         super().__init__(unique_id, model)
         self.hasBox = False
-        self.nextPos = None
         self.boxSrc = None
+        self.boxSrcs = []
         self.boxDst = boxDst
-        self.vertices = dict()
         self.boxId = None
+        self.path = []
 
+    def findPathTo(self, dst):
+        self.path = []
+        count = 0
+        open_set = PriorityQueue()
+        start = self.model.grid.get_cell_list_contents(self.pos)[0]
+        end = self.model.grid.get_cell_list_contents(dst)[0]
+        open_set.put((0, count, start))
+        came_from = {}
+        g_score = {contents[0]: float("inf") for contents, x, y in self.model.grid.coord_iter()}
+        g_score[start] = 0
+        f_score = {contents[0]: float("inf") for contents, x, y in self.model.grid.coord_iter()}
+        f_score[start] = h(start.pos, end.pos)
+        open_set_hash = {start}
+
+        near_end = [cell.pos for cell in end.realNeighbors]
+
+        while not open_set.empty():
+            current = open_set.get()[2]
+            open_set_hash.remove(current)
+
+            
+            if current.pos in near_end:
+                end = current
+                while end in came_from:
+                    self.path.append(end.pos)
+                    end = came_from[end]
+
+                return True
+                
+            for neighbor in current.realNeighbors:
+                temp_g_score = g_score[current] + 1
+
+                if temp_g_score < g_score[neighbor]:
+                    came_from[neighbor] = current
+                    g_score[neighbor] = temp_g_score
+                    f_score[neighbor] = temp_g_score + h(neighbor.pos, dst)
+                    
+                    if neighbor not in open_set_hash:
+                        count += 1
+                        open_set.put((f_score[neighbor], count, neighbor))
+                        open_set_hash.add(neighbor)
+            
+        return False
     
-    def moveTo(self, dst):
-        newPos = [self.pos[0], self.pos[1]]
-        if self.pos[0] < dst[0]:
-            newPos[0] += 1
-        
-        elif self.pos[0] > dst[0]:
-            newPos[0] -= 1
-        
-        if self.pos[1] < dst[1]:
-            newPos[1] += 1
-        
-        elif self.pos[1] > dst[1]:
-            newPos[1] -= 1
-        
-        self.model.grid.move_agent(self, (newPos[0], newPos[1]))
+
 
     def move(self):
-        possibleSteps = self.model.grid.get_neighborhood(
-            self.pos,
-            moore=True, # include diagonal neighbors
-            include_center=False) #Doesn't include its own position
+        self.model.update_neighbors()
+        near = self.model.grid.get_neighborhood(
+                self.pos,
+                moore=False, # don't include diagonal neighbors
+                include_center=False) #Doesn't include its own position
 
-        if (self.hasBox):
-           self.moveTo(self.boxDst)
+
+        if self.hasBox and self.boxDst not in near:
+            foundPath = self.findPathTo(self.boxDst)
+
+            if foundPath:
+                self.model.grid.move_agent(self, self.path.pop())
         
-        
-        elif (self.boxSrc):
-            self.moveTo(self.boxSrc)
+
+        elif self.boxSrc and self.boxSrc not in near:
+            
+            foundPath = self.findPathTo(self.boxSrc)
+
+            if foundPath:
+                self.model.grid.move_agent(self, self.path.pop())
 
         else:
-            move = False
-            count = 0
-            while (not move and count < 8):
-                move = True
-                self.nextPos = self.random.choice(possibleSteps) # choose random position to move to
-                for agent in self.model.grid.get_cell_list_contents([self.nextPos]): 
-                    if isinstance(agent, RobotAgent): # check whether random postion contains another Robot
-                        if (agent.nextPos == self.nextPos):
-                            self.nextPos
-                            move = False # if it does, it doesn't move
-            
-            if move:
-                self.model.grid.move_agent(self, self.nextPos) # move roomba to random possible position
+            possible = [cell.pos for cell in self.model.grid.get_cell_list_contents(self.pos)[0].realNeighbors]
+            self.model.grid.move_agent(self, self.random.choice(possible))
     
 
     def step(self):
         #get direct neighbors
-        near = self.model.grid.iter_neighbors(
+        near = self.model.grid.get_neighborhood(
                 self.pos,
-                moore=True, # include diagonal neighbors
+                moore=False, # don't include diagonal neighbors
                 include_center=True) #Doesn't include its own position
 
-        near_pos = [cell.pos for cell in near]
 
         # if agent has a box and box destination is near 
-        if self.hasBox and self.boxDst in near_pos:
+        if self.hasBox and self.boxDst in near:
             a = BoxAgent(self.boxId, self) # create instance of box agent
             self.model.schedule.add(a) # add it to the schedule
             self.model.grid.place_agent(a, self.boxDst) # place BoxAgent in box destination
@@ -107,34 +143,34 @@ class RobotAgent(Agent):
         if not self.hasBox:
             fourNeighbors = self.model.grid.iter_neighbors(
             self.pos,
-            moore=True, # include diagonal neighbors
+            moore=True, # don't include diagonal neighbors
             include_center=False,
             radius=4) #Doesn't include its own position
 
+            # Detect box in 4 cell range
             for cell in fourNeighbors:
                 for agent in self.model.grid.get_cell_list_contents([cell.pos]):
-                    if isinstance(agent, BoxAgent) and agent.pos != self.boxDst and agent.pos not in agent.prevDsts:
+                    if isinstance(agent, BoxAgent) and agent.pos != self.boxDst and agent.pos not in self.model.prevDsts:
                         self.boxSrc = agent.pos
-                        break
+                        
                 
-                if self.boxSrc:
-                    break
             
             near = self.model.grid.iter_neighbors(
                 self.pos,
-                moore=True, # include diagonal neighbors
+                moore=False, # don't include diagonal neighbors
                 include_center=True) #Doesn't include its own position
 
+            # Pick up box if one is near
             for cell in near:
                 for agent in self.model.grid.get_cell_list_contents([cell.pos]):
-                    if isinstance(agent, BoxAgent) and agent.pos != self.boxDst and not self.hasBox and agent.pos not in agent.prevDsts:
-                        print("Found Box")
+                    if isinstance(agent, BoxAgent) and agent.pos != self.boxDst and not self.hasBox and agent.pos not in self.model.prevDsts:
                         self.hasBox = True
                         self.boxId = agent.unique_id
                         self.model.grid._remove_agent(agent.pos, agent)
                         self.model.schedule.remove(agent)
+                        break
+                
+                if self.hasBox:
+                    break
         
         self.move()
-
-        
-
