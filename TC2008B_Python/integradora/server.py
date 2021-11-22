@@ -1,43 +1,70 @@
-from flask import Flask
-from flask import render_template, url_for, redirect, jsonify, request
-import random
-
-app = Flask("Wall-E API")
-app.config['SECRET_KEY'] = "peepeePooPoo"
-
-def makePoint() -> dict:
-    return {"x" : random.randint(0, 50), "y" : random.randint(0, 50), "z" : 0}
-
-posAgents = []
-carryBox = []
-posBox = []
-
-for i in range(5):
-    posAgents.append(makePoint())
-    if random.randint(0,1) == 1:
-        carryBox.append(True)
-    else:
-        carryBox.append(False)
-    posBox.append(makePoint())
-
-# print(posAgents, carryBox, posBox)
-
-@app.route('/')
-def default():
-    """ Test Connection"""
-    return "Connection Established Successfully"
-
-@app.route("/config", methods=['POST'])
-def config():
-    """Recieve Confimation"""
-    print("Message Received")
-    return "Message Received"
-
-@app.route("/update", methods=["GET"])
-def update():
-    """Send Agent Information"""
-    return jsonify({"Items" : posAgents})
+from random import randint
+from model import WarehouseModel, RobotAgent, BoxAgent, BoxDestination, TileAgent
+from mesa.visualization.modules import CanvasGrid, PieChartModule, ChartModule
+from mesa.visualization.ModularVisualization import ModularServer
+from mesa.visualization.UserParam import UserSettableParameter
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+def agent_portrayal(agent):
+    """Function that defines how each Agent is going to be portrayed visualy"""
+    portrayal = {"Shape": "circle",
+                 "Filled": True,
+                 "Layer": 0}
+
+    if isinstance(agent, RobotAgent):
+        portrayal["Color"] = "red"
+        portrayal["r"] = 0.5
+        portrayal["Layer"] = 1
+        if agent.hasBox:
+            portrayal["Color"] = "green"
+    
+    elif isinstance(agent, BoxAgent):
+        portrayal["Shape"] = "rect"
+        portrayal["Color"] = "#944300"
+        portrayal["Layer"] = 1
+        portrayal["w"] = 0.5
+        portrayal["h"] = 0.5
+    
+    elif isinstance(agent, BoxDestination):
+        portrayal["Shape"] = "rect"
+        portrayal["Color"] = "orange"
+        portrayal["Layer"] = 1
+        portrayal["w"] = 0.9
+        portrayal["h"] = 0.9
+    
+    if isinstance(agent, TileAgent):
+        portrayal["Filled"] = False
+    
+
+    return portrayal
+
+
+modelParams = {
+    "width": 10,
+    "height": 10,
+    "seed": UserSettableParameter("slider",
+                                        name="Seed",
+                                        value=5,
+                                        min_value=1,
+                                        max_value=1000),
+    "numBoxes": UserSettableParameter("slider",
+                                        name="Number of Boxes",
+                                        value=5,
+                                        min_value=1,
+                                        max_value=30),
+    "numRobots": UserSettableParameter("slider",
+                                        name="Number of Robots",
+                                        value=1,
+                                        min_value=1,
+                                        max_value=5)}
+
+grid = CanvasGrid(agent_portrayal, modelParams["width"], modelParams["height"], 500, 500)
+
+server = ModularServer(WarehouseModel,
+                       [grid],
+                       "Box Stacking Robot",
+                       modelParams)
+
+server.port = 8521 # The default
+server.launch()
