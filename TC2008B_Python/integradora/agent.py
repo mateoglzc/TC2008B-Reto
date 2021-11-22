@@ -50,6 +50,26 @@ class RobotAgent(Agent):
         self.boxDst = boxDst
         self.boxId = None
         self.path = []
+        self.direction = None
+    
+    def getDirection(self, nextStep):
+
+        # face north if moving up
+        if nextStep[1] > self.pos[1]:
+            return "north"
+        
+        # face south if moving down
+        if nextStep[1] < self.pos[1]:
+            return "south"
+        
+        # face east if moving right 
+        if nextStep[0] > self.pos[0]:
+            return "east"
+        
+        # face west if moving right 
+        if nextStep[0] < self.pos[0]:
+            return "west"
+
 
     def findPathTo(self, dst):
         self.path = []
@@ -109,6 +129,8 @@ class RobotAgent(Agent):
             foundPath = self.findPathTo(self.boxDst)
 
             if foundPath:
+                self.direction = self.getDirection(self.path[-1])
+                print(self.direction)
                 self.model.grid.move_agent(self, self.path.pop())
         
 
@@ -117,11 +139,16 @@ class RobotAgent(Agent):
             foundPath = self.findPathTo(self.boxSrc)
 
             if foundPath:
+                self.direction = self.getDirection(self.path[-1])
+                print(self.direction)
                 self.model.grid.move_agent(self, self.path.pop())
 
         else:
             possible = [cell.pos for cell in self.model.grid.get_cell_list_contents(self.pos)[0].realNeighbors]
-            self.model.grid.move_agent(self, self.random.choice(possible))
+            newPos = self.random.choice(possible)
+            self.direction = self.getDirection(newPos)
+            print(self.direction)
+            self.model.grid.move_agent(self, newPos)
     
 
     def step(self):
@@ -151,7 +178,9 @@ class RobotAgent(Agent):
             for cell in fourNeighbors:
                 for agent in self.model.grid.get_cell_list_contents([cell.pos]):
                     if isinstance(agent, BoxAgent) and agent.pos != self.boxDst and agent.pos not in self.model.prevDsts:
-                        self.boxSrc = agent.pos
+                            self.boxSrc = agent.pos
+                            break
+                        
                         
                 
             
