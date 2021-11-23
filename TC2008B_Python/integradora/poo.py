@@ -1,8 +1,12 @@
 from flask import Flask, jsonify, request
+from model import WarehouseModel, RobotAgent, BoxAgent, BoxDestination, TileAgent
 import random
 
 app = Flask("Wall-E API")
 app.config['SECRET_KEY'] = "peepeePooPoo"
+
+model = None
+
 
 def makeJson() -> dict:
     return {"x" : random.randint(0, 9) + 0.5,
@@ -11,12 +15,6 @@ def makeJson() -> dict:
             "direction": "north",
             "carryBox" : False}
 
-posAgents = []
-posBoxes = []
-numAgents = 0
-
-for i in range(5):
-    posAgents.append(makeJson())
 
 @app.route('/')
 def default() -> str:
@@ -27,18 +25,31 @@ def default() -> str:
 def config():
     """Recieve Confimation"""
     print("Message Received")
-    return "Message Received"
+    global model
+    numAgents = int(request.form.get("numAgents"))
+    numBoxes = int(request.form.get("numBoxes"))
+    model  = WarehouseModel(10,10, numAgents, numBoxes)
+    return "Message Received, Model Created"
+
+@app.route("/makeStep")
+def step():
+    """Step"""
+    global model
+    model.step()
+    return "Step Made"
 
 @app.route("/getAgents", methods=["GET"])
 def getAgents():
     """Send Agent Information"""
-    global numAgents
-    numAgents = int(request.form.get("numAgents"))
+    global model
+    posAgents = model.getRobots()
     return jsonify({"Items" : posAgents})
 
 @app.route("/getBoxes", methods=["GET"])
 def getBoxes():
     """Send Box Information"""
+    global model
+    posBoxes = model.getBoxes()
     return jsonify({"Items" : posBoxes})
 
 

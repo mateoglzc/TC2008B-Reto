@@ -116,17 +116,26 @@ class WarehouseModel(Model):
                     contents[0].realNeighbors.append(self.grid.get_cell_list_contents(neighbor)[0])
 
 
+    
+    def getRobots(self) -> list:
+        robotJson = []
+        l = [(agnt.unique_id, (x, y)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, RobotAgent)]
+        l.sort(key= lambda x : x[0])
+        for robot in l:
+            temp = {"x" : robot[1][0], "y" : 0.75, "z" : robot[1][1], "direction" : robot[1][2], "carryBox" : robot[1][3]}
+            robotJson.append(temp)
+        return robotJson
+
+    def getBoxes(self) -> list:
+        boxJson = []        
+        l = [(agnt.unique_id, (x, y)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, BoxAgent)]
+        l.sort(key= lambda x : x[0])
+        for box in l:
+            temp = {"x" : box[1][0], "y" : 0.75, "z" : box[1][1]}
+            boxJson.append(temp)
+        return boxJson
 
 
-
-        
-
-    
-    
-    
-    
-    
-    
     def step(self):
         '''Advance the model by one step.'''
 
