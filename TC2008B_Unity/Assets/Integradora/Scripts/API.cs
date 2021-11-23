@@ -22,6 +22,8 @@ public class Box
     public float x;
     public float y;
     public float z;
+
+    public bool active;
 }
 
 
@@ -57,10 +59,12 @@ public static class JsonHelper
 public class API : MonoBehaviour
 {
     [SerializeField] string url;
-    [SerializeField] string agentTP;
-    [SerializeField] string boxTP;
-    [SerializeField] string configTP;
-    [SerializeField] string updateTP;
+    [SerializeField] string getAgentsEP;
+    [SerializeField] string getBoxesEP;
+    [SerializeField] string configEP;
+    [SerializeField] string stepEP;
+    [SerializeField] string updateAgentsEP;
+    [SerializeField] string updateBoxesEP;
     [SerializeField] int numAgents;
     [SerializeField] int numBoxes;
     [SerializeField] GameObject catBoy;
@@ -72,30 +76,68 @@ public class API : MonoBehaviour
     GameObject[] agentGroup;
     GameObject[] boxGroup;
 
+    bool stepDone = true;
+
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(SendConfiguration());
 
         agentGroup = new GameObject[numAgents];
+        boxGroup = new GameObject[numBoxes];
 
         StartCoroutine(GetAgents());
-
+        StartCoroutine(GetBoxes());
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move 
-        // Sleep
-        // StartoutCorine(GetAgents());
-        
-        
+        if (stepDone)
+        {
+            stepDone = false;
+            StartCoroutine(MakeStep());
+        }
+
+    }
+
+    IEnumerator SendConfiguration()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("numAgents", numAgents);
+        form.AddField("numBoxes", numBoxes);
+
+        UnityWebRequest www = UnityWebRequest.Post(url + configEP, form);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success){
+            Debug.Log(www.downloadHandler.text);
+        } else {
+            Debug.Log(www.error);
+        }
+    }
+
+    IEnumerator MakeStep()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url + stepEP);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            StartCoroutine(UpdateAgents());
+            StartCoroutine(UpdateBoxes());
+            yield return new WaitForSeconds(2);     
+            stepDone = true;
+        }else
+        {
+            Debug.Log(www.error);
+        }
     }
 
     IEnumerator GetAgents()
     {
-        UnityWebRequest www = UnityWebRequest.Get(url + agentTP);
+        UnityWebRequest www = UnityWebRequest.Get(url + getAgentsEP);
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
@@ -108,10 +150,10 @@ public class API : MonoBehaviour
                 Vector3 temp = new Vector3(agents[i].x, agents[i].y, agents[i].z);
                 agentGroup[i] = Instantiate(catBoy, temp, Quaternion.identity);
                 // Update Box and light
-                agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
-                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? Color.green : Color.red;
-
+                agentGroup[i].transform.GetChild(8).gameObject.SetActive(false);
+                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = Color.red;
             }
+                yield return new WaitForSeconds(1);     
         }else
         {
             Debug.Log(www.error);
@@ -120,67 +162,74 @@ public class API : MonoBehaviour
 
     IEnumerator GetBoxes()
     {
-        UnityWebRequest www = UnityWebRequest.Get(url + boxTP);
+        UnityWebRequest www = UnityWebRequest.Get(url + getBoxesEP);
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
         {
             Debug.Log(www.downloadHandler.text);
             boxes = JsonHelper.FromJson<Box>(www.downloadHandler.text);
-            for (int i = 0; i < numAgents; i++)
+            for (int i = 0; i < numBoxes; i++)
             {
                 // Update direction
                 Vector3 temp = new Vector3(boxes[i].x, boxes[i].y, boxes[i].z);
                 boxGroup[i] = Instantiate(happyMeal, temp, Quaternion.identity);
             }
+                yield return new WaitForSeconds(1);     
         }else
         {
             Debug.Log(www.error);
         }
     }
 
-    IEnumerator SendConfiguration()
-    {
-        WWWForm form = new WWWForm();
-        form.AddField("numAgents", numAgents);
-        form.AddField("numBoxes", numBoxes);
 
-        UnityWebRequest www = UnityWebRequest.Post(url + configTP, form);
+    IEnumerator UpdateAgents()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url + updateAgentsEP);
         yield return www.SendWebRequest();
 
-        if (www.result == UnityWebRequest.Result.Success){
+        if (www.result == UnityWebRequest.Result.Success)
+        {
             Debug.Log(www.downloadHandler.text);
-        } else {
+            agents = JsonHelper.FromJson<Agent>(www.downloadHandler.text);
+            for (int i = 0; i < numAgents; i++)
+            {
+                // Update direction
+                Vector3 pos1 = new Vector3(agents[i].x, agents[i].y, agents[i].z);
+                agentGroup[i].transform.position = pos1;
+                agentGroup[i].transform.rotation = Quaternion.Euler(0, 90, 0);
+                // Update Box and light
+                agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
+                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? Color.green : Color.red;
+            }
+                yield return new WaitForSeconds(1);     
+        }else
+        {
             Debug.Log(www.error);
         }
     }
 
-    // IEnumerator UpdateAgents()
-    // {
-        // UnityWebRequest www = UnityWebRequest.Get(url + testTP);
-        // yield return www.SendWebRequest();
+    IEnumerator UpdateBoxes()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url + updateBoxesEP);
+        yield return www.SendWebRequest();
 
-        // if (www.result == UnityWebRequest.Result.Success)
-        // {
-
-        //     agents = JsonHelper.FromJson<Agent>(www.downloadHandler.text);
-        //     for (int i = 0; i < numAgents; i++)
-        //     {
-        //         // Update direction
-        //         Vector3 pos1 = new Vector3(agents[i].x, agents[i].y, agents[i].z);
-        //         // Make translation
-        //         Vector4 homoVect = Transform.MakeHomogenousVectors(temp);
-        //         // agentGroup[i].transform.position = Transform.MakeTranslation(agent)
-        //         // Update Box and light
-        //         agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
-        //         agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? Color.green : Color.red;
-
-                
-        //     }
-        // }else
-        // {
-        //     Debug.Log(www.error);
-        // }
-    // }
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            boxes = JsonHelper.FromJson<Box>(www.downloadHandler.text);
+            for (int i = 0; i < numBoxes; i++)
+            {
+                // Update direction
+                Vector3 pos1 = new Vector3(boxes[i].x, boxes[i].y, boxes[i].z);
+                boxGroup[i].transform.position = pos1;  
+                boxGroup[i].SetActive(boxes[i].active); 
+            }
+                yield return new WaitForSeconds(1);     
+        }else
+        {
+            Debug.Log(www.error);
+        }
+    }
 
 }

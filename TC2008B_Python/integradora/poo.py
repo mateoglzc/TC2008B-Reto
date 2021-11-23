@@ -7,15 +7,6 @@ app.config['SECRET_KEY'] = "peepeePooPoo"
 
 model = None
 
-
-def makeJson() -> dict:
-    return {"x" : random.randint(0, 9) + 0.5,
-            "y" : 0.5, 
-            "z" : random.randint(0, 9) + 0.5,
-            "direction": "north",
-            "carryBox" : False}
-
-
 @app.route('/')
 def default() -> str:
     """ Test Connection"""
@@ -24,7 +15,6 @@ def default() -> str:
 @app.route("/config", methods=['POST'])
 def config():
     """Recieve Confimation"""
-    print("Message Received")
     global model
     numAgents = int(request.form.get("numAgents"))
     numBoxes = int(request.form.get("numBoxes"))
