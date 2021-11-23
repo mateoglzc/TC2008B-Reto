@@ -1,31 +1,25 @@
-from flask import Flask, jsonify
-# from flask import render_template, url_for, redirect, jsonify, request
+from flask import Flask, jsonify, request
 import random
 
 app = Flask("Wall-E API")
 app.config['SECRET_KEY'] = "peepeePooPoo"
 
 def makeJson() -> dict:
-    return {"x" : random.randint(0, 50),
-            "y" : 0, 
-            "z" : random.randint(0, 50)}
+    return {"x" : random.randint(0, 9) + 0.5,
+            "y" : 0.5, 
+            "z" : random.randint(0, 9) + 0.5,
+            "direction": "north",
+            "carryBox" : False}
 
 posAgents = []
-carryBox = []
-posBox = []
+posBoxes = []
+numAgents = 0
 
 for i in range(5):
-    posAgents.append(makePoint())
-    if random.randint(0,1) == 1:
-        carryBox.append(True)
-    else:
-        carryBox.append(False)
-    posBox.append(makePoint())
-
-# print(posAgents, carryBox, posBox)
+    posAgents.append(makeJson())
 
 @app.route('/')
-def default():
+def default() -> str:
     """ Test Connection"""
     return "Connection Established Successfully"
 
@@ -36,14 +30,16 @@ def config():
     return "Message Received"
 
 @app.route("/getAgents", methods=["GET"])
-def update():
+def getAgents():
     """Send Agent Information"""
+    global numAgents
+    numAgents = int(request.form.get("numAgents"))
     return jsonify({"Items" : posAgents})
 
 @app.route("/getBoxes", methods=["GET"])
-def update():
+def getBoxes():
     """Send Box Information"""
-    return jsonify({"Items" : posAgents})
+    return jsonify({"Items" : posBoxes})
 
 
 if __name__ == "__main__":
