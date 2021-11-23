@@ -2313,7 +2313,7 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!43 &1364535151
+--- !u!43 &1382691555
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2330,8 +2330,8 @@ Mesh:
     firstVertex: 0
     vertexCount: 24
     localAABB:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
+      m_Center: {x: 0.5, y: 0.5, z: -0.5}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
   m_Shapes:
     vertices: []
     shapes: []
@@ -4942,6 +4942,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1449253702746541615, guid: 5836415140f2c764fa5f4492427da663, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 1382691555}
+    - target: {fileID: 4377604842654131914, guid: 5836415140f2c764fa5f4492427da663, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 1382691555}
+    - target: {fileID: 5525152537941118214, guid: 5836415140f2c764fa5f4492427da663, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 1382691555}
     - target: {fileID: 8268164358857920264, guid: 5836415140f2c764fa5f4492427da663, type: 3}
       propertyPath: m_Mesh
       value: 
