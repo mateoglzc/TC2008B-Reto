@@ -130,7 +130,6 @@ class RobotAgent(Agent):
 
             if foundPath:
                 self.direction = self.getDirection(self.path[-1])
-                print(self.direction)
                 self.model.grid.move_agent(self, self.path.pop())
         
 
@@ -140,14 +139,12 @@ class RobotAgent(Agent):
 
             if foundPath:
                 self.direction = self.getDirection(self.path[-1])
-                print(self.direction)
                 self.model.grid.move_agent(self, self.path.pop())
 
         else:
             possible = [cell.pos for cell in self.model.grid.get_cell_list_contents(self.pos)[0].realNeighbors]
-            newPos = self.random.choice(possible)
+            newPos = self.model.random.choice(possible)
             self.direction = self.getDirection(newPos)
-            print(self.direction)
             self.model.grid.move_agent(self, newPos)
     
 

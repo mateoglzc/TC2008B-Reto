@@ -7,7 +7,6 @@ from mesa.space import MultiGrid
 from mesa import Model
 from mesa.datacollection import DataCollector
 from agent import RobotAgent, BoxAgent, BoxDestination, TileAgent
-import random
 import time
 
 
@@ -20,17 +19,17 @@ class WarehouseModel(Model):
         self.schedule = RandomActivation(self)
         self.running = True # For visualization
         self.startTime = None # For keeping track of time
-        self.boxDst = (random.randint(0, width-1), random.randint(0, height-1))
+        self.boxDst = (self.random.randint(0, width-1), self.random.randint(0, height-1))
         self.boxesInPlace = []
         self.prevDsts = []
-        self.unique_id = 0
 
         print(self._seed)
         # add tile agents to every cell in grid
+        id = 0
         for i in range(width):
             for j in range(height):
-                a = TileAgent(self.unique_id, self)
-                self.unique_id += 1
+                a = TileAgent(id, self)
+                id += 1
                 self.schedule.add(a)
                 self.grid.place_agent(a, (i, j))
         
@@ -40,18 +39,17 @@ class WarehouseModel(Model):
         
         # Add box agents to grid
         for i in range(self.numBoxes):
-            a = BoxAgent(self.unique_id, self) # create instance of box agent
-            self.unique_id += 1
+            a = BoxAgent(1000+i, self) # create instance of box agent
             self.schedule.add(a) # add it to the schedule
 
-            randomPos = (random.randint(0, width-1), random.randint(0, height-1)) # generate a random position
+            randomPos = (self.random.randint(0, width-1), self.random.randint(0, height-1)) # generate a random position
             contains = True
             while contains: # generate a new randomPos while there is a BoxAgent in randomPos
                 contains = False
                 agents_in_cell = self.grid.get_cell_list_contents([randomPos])
                 for agent in agents_in_cell:
                     if isinstance(agent, BoxAgent) or isinstance(agent, RobotAgent):
-                        randomPos = (random.randint(0, width-1), random.randint(0, height-1))
+                        randomPos = (self.random.randint(0, width-1), self.random.randint(0, height-1))
                         contains = True
                         break
 
@@ -59,18 +57,17 @@ class WarehouseModel(Model):
 
         # add robot agents to the gird
         for i in range(self.numRobots):
-            a = RobotAgent(self.unique_id, self, self.boxDst) #create instance of RobotAngent with unique id starting from 1000
-            self.unique_id += 1
+            a = RobotAgent(2000+i, self, self.boxDst) #create instance of RobotAngent with unique id starting from 1000
             a.boxDst = self.boxDst
             self.schedule.add(a) # add it to the schedule
-            randomPos = (random.randint(0, width-1), random.randint(0, height-1)) # generate a random position
+            randomPos = (self.random.randint(0, width-1), self.random.randint(0, height-1)) # generate a random position
             contains = True
             while contains > 0: # generate a new randomPos while there is an Agent in randomPos
                 contains = False
                 agents_in_cell = self.grid.get_cell_list_contents([randomPos])
                 for agent in agents_in_cell:
                     if isinstance(agent, BoxAgent) or isinstance(agent, RobotAgent):
-                        randomPos = (random.randint(0, width-1), random.randint(0, height-1))
+                        randomPos = (self.random.randint(0, width-1), self.random.randint(0, height-1))
                         contains = True
                         break
             
@@ -78,19 +75,30 @@ class WarehouseModel(Model):
         
     
     def changeBoxDst(self):
-        newBoxDst = random.choice(self.grid.get_cell_list_contents([self.boxDst])[0].realNeighbors)
-        while len(newBoxDst.realNeighbors) == 0 or newBoxDst.pos in self.prevDsts:
-           newBoxDst = random.choice(self.grid.get_cell_list_contents([self.boxDst])[0].realNeighbors)
-        
+        dstNeighbors = self.grid.get_cell_list_contents([self.boxDst])[0].realNeighbors
+        accessible = []
+        for neighbor in dstNeighbors:
+            if len(neighbor.realNeighbors) != 0: # if neighbor is accessible
+                accessible.append(neighbor)
+
+
+        if len(accessible) > 0: # choose a random neighbor that is accessible
+            newBoxDst = self.random.choice(accessible).pos
+
+        else: # if none are accessible
+            # move to a random position in the grid
+            newBoxDst = (self.random.randint(0, self.grid.width-1), self.random.randint(0, self.grid.height-1))
+            while newBoxDst in self.prevDsts:
+                newBoxDst = (self.random.randint(0, self.grid.width-1), self.random.randint(0, self.grid.height-1))
 
         for agent in self.schedule.agents:
             if isinstance(agent, RobotAgent):
-                agent.boxDst = newBoxDst.pos
+                agent.boxDst = newBoxDst
             if isinstance(agent, BoxDestination):
-                self.grid.move_agent(agent, newBoxDst.pos)
+                self.grid.move_agent(agent, newBoxDst)
         
         self.prevDsts.append(self.boxDst)
-        self.boxDst = newBoxDst.pos
+        self.boxDst = newBoxDst
     
     def update_neighbors(self):
         
@@ -147,11 +155,7 @@ class WarehouseModel(Model):
         
         if count == 5:
             self.changeBoxDst()
-        
-        if not self.startTime:
-            self.startTime = time.time()
-        
-        
+                
         
         
         self.schedule.step()
