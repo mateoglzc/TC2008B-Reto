@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import random
 
 app = Flask("Wall-E API")
@@ -12,6 +12,8 @@ def makeJson() -> dict:
             "carryBox" : False}
 
 posAgents = []
+posBoxes = []
+numAgents = 0
 
 for i in range(5):
     posAgents.append(makeJson())
@@ -28,14 +30,16 @@ def config():
     return "Message Received"
 
 @app.route("/getAgents", methods=["GET"])
-def update():
+def getAgents():
     """Send Agent Information"""
+    global numAgents
+    numAgents = int(request.form.get("numAgents"))
     return jsonify({"Items" : posAgents})
 
-# @app.route("/getBoxes", methods=["GET"])
-# def update():
-#     """Send Box Information"""
-#     return jsonify({"Items" : posAgents})
+@app.route("/getBoxes", methods=["GET"])
+def getBoxes():
+    """Send Box Information"""
+    return jsonify({"Items" : posBoxes})
 
 
 if __name__ == "__main__":
