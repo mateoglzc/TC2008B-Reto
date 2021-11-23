@@ -7,18 +7,14 @@ using System;
 [Serializable]
 public class Agent
 {
-    public int x;
-    public int y;
-    public int z;
+    public float x;
+    public float y;
+    public float z;
 
-    public int rotation_degrees;
+    public string direction;
 
-    public void print()
-    {
-        Debug.Log(x);
-        Debug.Log(y);
-        Debug.Log(z);
-    }
+    public bool carryBox;
+
 }
 
 public static class JsonHelper
@@ -77,6 +73,10 @@ public class API : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Move 
+        // Sleep
+        // StartCoroutine(GetAgents());
+        
         
     }
 
@@ -91,10 +91,14 @@ public class API : MonoBehaviour
             agents = JsonHelper.FromJson<Agent>(www.downloadHandler.text);
             for (int i = 0; i < numAgents; i++)
             {
+                // Update direction
                 Vector3 temp = new Vector3(agents[i].x, agents[i].y, agents[i].z);
                 agentGroup[i] = Instantiate(catBoy, temp, Quaternion.identity);
-                var x = agentGroup[i].transform.GetChild(1).GetComponent<MeshRenderer>().bounds;
-                Debug.Log(x);
+                // Update Box and light
+                agentGroup[i].transform.GetChild(8).gameObject.active = agents[i].carryBox;
+                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? Color.green : Color.red;
+
+                
             }
         }else
         {
@@ -105,7 +109,7 @@ public class API : MonoBehaviour
     IEnumerator SendConfiguration()
     {
         WWWForm form = new WWWForm();
-        form.AddField("Confimation", "Good");
+        form.AddField("numAgents", numAgents);
 
         UnityWebRequest www = UnityWebRequest.Post(url + configTP, form);
         yield return www.SendWebRequest();
