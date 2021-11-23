@@ -119,19 +119,25 @@ class WarehouseModel(Model):
     
     def getRobots(self) -> list:
         robotJson = []
-        l = [(agnt.unique_id, (x, y)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, RobotAgent)]
+        l = [(agnt.unique_id, (x, y, agnt.direction, agnt.hasBox)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, RobotAgent)]
         l.sort(key= lambda x : x[0])
         for robot in l:
-            temp = {"x" : robot[1][0], "y" : 0.75, "z" : robot[1][1], "direction" : robot[1][2], "carryBox" : robot[1][3]}
+            temp = {"x" : robot[1][0] + 0.5, "y" : 0.3, "z" : robot[1][1] + 0.5, "direction" : robot[1][2], "carryBox" : robot[1][3]}
             robotJson.append(temp)
         return robotJson
 
     def getBoxes(self) -> list:
-        boxJson = []        
+        boxJson = []
         l = [(agnt.unique_id, (x, y)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, BoxAgent)]
         l.sort(key= lambda x : x[0])
-        for box in l:
-            temp = {"x" : box[1][0], "y" : 0.75, "z" : box[1][1]}
+
+        i = 0
+        for j in range(1000, 1000 + self.numBoxes):
+            if l[i][0] != j:
+                temp = {"x" : -1 + .305, "y" : 0, "z" : -1 + .695, "active" : False}
+            else:
+                temp = {"x" : l[i][1][0] + .305, "y" : 0, "z" : l[i][1][1] + .695, "active" : True}
+                i += 1
             boxJson.append(temp)
         return boxJson
 
