@@ -62,6 +62,7 @@ public class API : MonoBehaviour
     [SerializeField] string configTP;
     [SerializeField] string updateTP;
     [SerializeField] int numAgents;
+    [SerializeField] int numBoxes;
     [SerializeField] GameObject catBoy;
     [SerializeField] GameObject happyMeal;
 
@@ -87,7 +88,7 @@ public class API : MonoBehaviour
     {
         // Move 
         // Sleep
-        // StartCoroutine(GetAgents());
+        // StartoutCorine(GetAgents());
         
         
     }
@@ -142,6 +143,7 @@ public class API : MonoBehaviour
     {
         WWWForm form = new WWWForm();
         form.AddField("numAgents", numAgents);
+        form.AddField("numBoxes", numBoxes);
 
         UnityWebRequest www = UnityWebRequest.Post(url + configTP, form);
         yield return www.SendWebRequest();
