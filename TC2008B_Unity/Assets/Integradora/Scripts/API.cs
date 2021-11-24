@@ -11,7 +11,7 @@ public class Agent
     public float y;
     public float z;
 
-    public string direction;
+    public int direction;
 
     public bool carryBox;
 }
@@ -197,7 +197,7 @@ public class API : MonoBehaviour
                 // Update direction
                 Vector3 pos1 = new Vector3(agents[i].x, agents[i].y, agents[i].z);
                 agentGroup[i].transform.position = pos1;
-                agentGroup[i].transform.rotation = Quaternion.Euler(0, 90, 0);
+                agentGroup[i].transform.rotation = Quaternion.Euler(0, agents[i].direction, 0);
                 // Update Box and light
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
                 agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? Color.green : Color.red;
