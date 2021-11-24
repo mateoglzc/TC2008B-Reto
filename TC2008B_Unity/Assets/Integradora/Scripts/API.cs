@@ -11,7 +11,7 @@ public class Agent
     public float y;
     public float z;
 
-    public string direction;
+    public int direction = 0;
 
     public bool carryBox;
 }
@@ -149,11 +149,12 @@ public class API : MonoBehaviour
                 // Update direction
                 Vector3 temp = new Vector3(agents[i].x, agents[i].y, agents[i].z);
                 agentGroup[i] = Instantiate(catBoy, temp, Quaternion.identity);
+                agentGroup[i].transform.rotation = Quaternion.Euler(0, agents[i].direction, 0);
                 // Update Box and light
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(false);
                 agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = Color.red;
             }
-                yield return new WaitForSeconds(1);     
+                yield return new WaitForSeconds(0.7f);
         }else
         {
             Debug.Log(www.error);
@@ -175,7 +176,7 @@ public class API : MonoBehaviour
                 Vector3 temp = new Vector3(boxes[i].x, boxes[i].y, boxes[i].z);
                 boxGroup[i] = Instantiate(happyMeal, temp, Quaternion.identity);
             }
-                yield return new WaitForSeconds(1);     
+                yield return new WaitForSeconds(0.7f);
         }else
         {
             Debug.Log(www.error);
@@ -195,14 +196,14 @@ public class API : MonoBehaviour
             for (int i = 0; i < numAgents; i++)
             {
                 // Update direction
+                agentGroup[i].transform.rotation = Quaternion.Euler(0, agents[i].direction, 0);
                 Vector3 pos1 = new Vector3(agents[i].x, agents[i].y, agents[i].z);
                 agentGroup[i].transform.position = pos1;
-                agentGroup[i].transform.rotation = Quaternion.Euler(0, 90, 0);
                 // Update Box and light
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
-                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? Color.green : Color.red;
+                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? new Color(12f/255f, 134f/255f, 43f/255f) : Color.red;
             }
-                yield return new WaitForSeconds(1);     
+                yield return new WaitForSeconds(0.7f);
         }else
         {
             Debug.Log(www.error);
@@ -225,7 +226,7 @@ public class API : MonoBehaviour
                 boxGroup[i].transform.position = pos1;  
                 boxGroup[i].SetActive(boxes[i].active); 
             }
-                yield return new WaitForSeconds(1);     
+                yield return new WaitForSeconds(0.7f);
         }else
         {
             Debug.Log(www.error);

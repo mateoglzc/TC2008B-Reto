@@ -56,19 +56,19 @@ class RobotAgent(Agent):
 
         # face north if moving up
         if nextStep[1] > self.pos[1]:
-            return "north"
+            return 180
         
         # face south if moving down
         if nextStep[1] < self.pos[1]:
-            return "south"
+            return 0
         
         # face east if moving right 
         if nextStep[0] > self.pos[0]:
-            return "east"
+            return 270
         
         # face west if moving right 
         if nextStep[0] < self.pos[0]:
-            return "west"
+            return 90
 
 
     def findPathTo(self, dst):
