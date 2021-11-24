@@ -199,6 +199,7 @@ public class API : MonoBehaviour
                 agentGroup[i].transform.rotation = Quaternion.Euler(0, agents[i].direction, 0);
                 Vector3 pos1 = new Vector3(agents[i].x, agents[i].y, agents[i].z);
                 agentGroup[i].transform.position = pos1;
+                
                 // Update Box and light
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
                 agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? new Color(33f/255f, 84f/255f, 25f/255f) : new Color(246f/255f, 31f/255f, 29f/255f);
