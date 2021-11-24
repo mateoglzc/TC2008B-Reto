@@ -133,11 +133,11 @@ class WarehouseModel(Model):
 
         i = 0
         for j in range(1000, 1000 + self.numBoxes):
-            if l[i][0] != j:
-                temp = {"x" : -1 + .305, "y" : 0, "z" : -1 + .695, "active" : False}
-            else:
+            if i < len(l) and l[i][0] == j:
                 temp = {"x" : l[i][1][0] + .305, "y" : 0, "z" : l[i][1][1] + .695, "active" : True}
                 i += 1
+            else:
+                temp = {"x" : -1 + .305, "y" : 0, "z" : -1 + .695, "active" : False}
             boxJson.append(temp)
         return boxJson
 
