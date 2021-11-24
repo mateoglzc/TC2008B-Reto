@@ -152,7 +152,7 @@ public class API : MonoBehaviour
                 agentGroup[i].transform.rotation = Quaternion.Euler(0, agents[i].direction, 0);
                 // Update Box and light
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(false);
-                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = Color.red;
+                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = new Color(246f/255f, 31f/255f, 29f/255f);
             }
                 yield return new WaitForSeconds(0.7f);
         }else
@@ -201,7 +201,7 @@ public class API : MonoBehaviour
                 agentGroup[i].transform.position = pos1;
                 // Update Box and light
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
-                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? new Color(12f/255f, 134f/255f, 43f/255f) : Color.red;
+                agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? new Color(33f/255f, 84f/255f, 25f/255f) : new Color(246f/255f, 31f/255f, 29f/255f);
             }
                 yield return new WaitForSeconds(0.7f);
         }else
