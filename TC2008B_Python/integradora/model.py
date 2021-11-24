@@ -7,6 +7,7 @@ from mesa.space import MultiGrid
 from mesa import Model
 from mesa.datacollection import DataCollector
 from agent import RobotAgent, BoxAgent, BoxDestination, TileAgent
+from mesa.datacollection import DataCollector
 import time
 
 
@@ -19,11 +20,15 @@ class WarehouseModel(Model):
         self.schedule = RandomActivation(self)
         self.running = True # For visualization
         self.startTime = None # For keeping track of time
+        self.timeLimit = 180
         self.boxDst = (self.random.randint(0, width-1), self.random.randint(0, height-1))
         self.boxesInPlace = []
         self.prevDsts = []
+        self.datacollector = DataCollector({
+            "Moves": lambda m: {agent.unique_id: agent.numMoves for agent in m.schedule.agents if isinstance(agent, RobotAgent)},
+            "Total Time": lambda m: time.time() - m.startTime
+        })
 
-        print(self._seed)
         # add tile agents to every cell in grid
         id = 0
         for i in range(width):
@@ -100,6 +105,7 @@ class WarehouseModel(Model):
         self.prevDsts.append(self.boxDst)
         self.boxDst = newBoxDst
     
+
     def update_neighbors(self):
         
         for (contents, x, y) in self.grid.coord_iter(): # iterate through each cell
@@ -126,6 +132,7 @@ class WarehouseModel(Model):
             robotJson.append(temp)
         return robotJson
 
+
     def getBoxes(self) -> list:
         boxJson = []
         l = [(agnt.unique_id, (x, y)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, BoxAgent)]
@@ -140,18 +147,39 @@ class WarehouseModel(Model):
                 temp = {"x" : -1 + .305, "y" : 0, "z" : -1 + .695, "active" : False}
             boxJson.append(temp)
         return boxJson
+    
+
+    def stopRunning(self):
+        self.running = False
+        df = self.datacollector.get_model_vars_dataframe()
+        
+        agentMoves = ""
+        for key, value in df.iat[-1, 0].items():
+            agentMoves += f"Agent {key}: {value} moves\n"
+
+
+        totalTime = f"Time Elapsed: {df.iat[-1, 1]} seconds"
+
+        print(totalTime)
+        print(agentMoves)
 
 
     def step(self):
         '''Advance the model by one step.'''
+        
+        if not self.startTime:
+            self.startTime = time.time()
+
+        self.datacollector.collect(self)
 
         for agent in self.grid.get_cell_list_contents(self.boxDst):
             if isinstance(agent, BoxAgent) and agent.unique_id not in self.boxesInPlace:
                 self.boxesInPlace.append(agent.unique_id)
 
 
-        if len(self.boxesInPlace) == self.numBoxes:
-            self.running = False
+        if len(self.boxesInPlace) == self.numBoxes or time.time() - self.startTime >= self.timeLimit:
+            self.stopRunning()
+
         
         #change box destination if box destination has 5 boxes
         count = 0

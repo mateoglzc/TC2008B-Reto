@@ -51,7 +51,9 @@ class RobotAgent(Agent):
         self.boxId = None
         self.path = []
         self.direction = None
+        self.numMoves = 0
     
+
     def getDirection(self, nextStep):
 
         # face north if moving up
@@ -116,7 +118,6 @@ class RobotAgent(Agent):
         return False
     
 
-
     def move(self):
         self.model.update_neighbors()
         near = self.model.grid.get_neighborhood(
@@ -131,6 +132,7 @@ class RobotAgent(Agent):
             if foundPath:
                 self.direction = self.getDirection(self.path[-1])
                 self.model.grid.move_agent(self, self.path.pop())
+                self.numMoves += 1
         
 
         elif self.boxSrc and self.boxSrc not in near:
@@ -140,12 +142,14 @@ class RobotAgent(Agent):
             if foundPath:
                 self.direction = self.getDirection(self.path[-1])
                 self.model.grid.move_agent(self, self.path.pop())
+                self.numMoves += 1
 
         else:
             possible = [cell.pos for cell in self.model.grid.get_cell_list_contents(self.pos)[0].realNeighbors]
             newPos = self.model.random.choice(possible)
             self.direction = self.getDirection(newPos)
             self.model.grid.move_agent(self, newPos)
+            self.numMoves += 1
     
 
     def step(self):
