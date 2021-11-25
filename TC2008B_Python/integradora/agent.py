@@ -145,10 +145,11 @@ class RobotAgent(Agent):
 
         else:
             possible = [cell.pos for cell in self.model.grid.get_cell_list_contents(self.pos)[0].realNeighbors]
-            newPos = self.model.random.choice(possible)
-            self.direction = self.getDirection(newPos)
-            self.model.grid.move_agent(self, newPos)
-            self.numMoves += 1
+            if len(possible) > 0:
+                newPos = self.model.random.choice(possible)
+                self.direction = self.getDirection(newPos)
+                self.model.grid.move_agent(self, newPos)
+                self.numMoves += 1
     
 
     def step(self):
