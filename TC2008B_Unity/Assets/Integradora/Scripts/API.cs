@@ -127,7 +127,7 @@ public class API : MonoBehaviour
             Debug.Log(www.downloadHandler.text);
             StartCoroutine(UpdateAgents());
             StartCoroutine(UpdateBoxes());
-            yield return new WaitForSeconds(2);     
+            yield return new WaitForSeconds(2);
             stepDone = true;
         }else
         {

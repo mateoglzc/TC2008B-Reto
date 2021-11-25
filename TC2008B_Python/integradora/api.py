@@ -25,8 +25,10 @@ def config():
 def step():
     """Step"""
     global model
-    model.step()
-    return "Step Made"
+    if model.running:
+        model.step()
+        return "Step Made"
+    return "Model finished"
 
 @app.route("/getAgents", methods=["GET"])
 def getAgents():
