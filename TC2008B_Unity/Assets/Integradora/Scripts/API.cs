@@ -77,28 +77,51 @@ public class API : MonoBehaviour
     GameObject[] boxGroup;
 
     bool stepDone = true;
+    bool gotAgents = false;
+    bool gotBoxes = false;
+    bool first = true;
+    [SerializeField] float timeToWait = 1;
+    [SerializeField] float timeElapsed;
+    List <Vector3> newPositions;
+    List <Vector3> ogPositions;
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(SendConfiguration());
 
+        newPositions = new List<Vector3>();
+        ogPositions = new List<Vector3>();
+
         agentGroup = new GameObject[numAgents];
         boxGroup = new GameObject[numBoxes];
 
+
         StartCoroutine(GetAgents());
         StartCoroutine(GetBoxes());
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (stepDone)
-        {
-            stepDone = false;
-            StartCoroutine(MakeStep());
+        
+        timeElapsed += Time.deltaTime;
+        if (gotAgents && gotBoxes){
+            float t = timeElapsed/timeToWait;
+            if (timeElapsed >= timeToWait)
+            {
+                timeElapsed = 0;
+                stepDone = false;
+                StartCoroutine(MakeStep());
+            }
+            
+            for (int i = 0; i < agentGroup.Length; i++)
+            {
+                agentGroup[i].transform.position = Vector3.Lerp(agentGroup[i].transform.position, newPositions[i], t);
+            }
+            
         }
-
     }
 
     IEnumerator SendConfiguration()
@@ -125,9 +148,8 @@ public class API : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             Debug.Log(www.downloadHandler.text);
-            StartCoroutine(UpdateAgents());
-            StartCoroutine(UpdateBoxes());
-            yield return new WaitForSeconds(2);
+            yield return StartCoroutine(UpdateAgents());
+            yield return StartCoroutine(UpdateBoxes());
             stepDone = true;
         }else
         {
@@ -154,7 +176,7 @@ public class API : MonoBehaviour
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(false);
                 agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = new Color(246f/255f, 31f/255f, 29f/255f);
             }
-                yield return new WaitForSeconds(0.7f);
+            gotAgents = true;
         }else
         {
             Debug.Log(www.error);
@@ -176,7 +198,7 @@ public class API : MonoBehaviour
                 Vector3 temp = new Vector3(boxes[i].x, boxes[i].y, boxes[i].z);
                 boxGroup[i] = Instantiate(happyMeal, temp, Quaternion.identity);
             }
-                yield return new WaitForSeconds(0.7f);
+            gotBoxes = true;
         }else
         {
             Debug.Log(www.error);
@@ -193,18 +215,21 @@ public class API : MonoBehaviour
         {
             Debug.Log(www.downloadHandler.text);
             agents = JsonHelper.FromJson<Agent>(www.downloadHandler.text);
+            newPositions.Clear();
+            ogPositions.Clear();
             for (int i = 0; i < numAgents; i++)
             {
                 // Update direction
                 agentGroup[i].transform.rotation = Quaternion.Euler(0, agents[i].direction, 0);
                 Vector3 pos1 = new Vector3(agents[i].x, agents[i].y, agents[i].z);
-                agentGroup[i].transform.position = pos1;
+                ogPositions.Add(agentGroup[i].transform.position);
+                newPositions.Add(pos1);
+                
                 
                 // Update Box and light
                 agentGroup[i].transform.GetChild(8).gameObject.SetActive(agents[i].carryBox);
                 agentGroup[i].transform.GetChild(7).GetChild(2).GetComponent<Light>().color = (agents[i].carryBox) ? new Color(33f/255f, 84f/255f, 25f/255f) : new Color(246f/255f, 31f/255f, 29f/255f);
             }
-                yield return new WaitForSeconds(0.7f);
         }else
         {
             Debug.Log(www.error);
@@ -227,7 +252,6 @@ public class API : MonoBehaviour
                 boxGroup[i].transform.position = pos1;  
                 boxGroup[i].SetActive(boxes[i].active); 
             }
-                yield return new WaitForSeconds(0.7f);
         }else
         {
             Debug.Log(www.error);
