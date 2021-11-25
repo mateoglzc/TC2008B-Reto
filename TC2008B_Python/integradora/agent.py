@@ -52,7 +52,7 @@ class RobotAgent(Agent):
         self.path = []
         self.direction = None
     
-    def getDirection(self, nextStep):
+    def getDirection(self, nextStep) -> int:
 
         # face north if moving up
         if nextStep[1] > self.pos[1]:
@@ -118,7 +118,7 @@ class RobotAgent(Agent):
 
 
     def move(self):
-        self.model.update_neighbors()
+        self.model.updateNeighbors()
         near = self.model.grid.get_neighborhood(
                 self.pos,
                 moore=False, # don't include diagonal neighbors
