@@ -1,5 +1,8 @@
 # TC2008B-Reto
 
+Carpeta de *Python* contiene carpetas para actividad integradora y reto final
+Carpeta de *Assets* de *Unity* contiene carpetas para actividad integradora y reto final
+
 Equipo:
 - Diego Mejía - A01024228
 - Enrique Mondelli - A01379363
