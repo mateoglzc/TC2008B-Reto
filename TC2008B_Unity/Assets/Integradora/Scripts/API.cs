@@ -76,10 +76,8 @@ public class API : MonoBehaviour
     GameObject[] agentGroup;
     GameObject[] boxGroup;
 
-    bool stepDone = true;
     bool gotAgents = false;
     bool gotBoxes = false;
-    bool first = true;
     [SerializeField] float timeToWait = 1;
     [SerializeField] float timeElapsed;
     List <Vector3> newPositions;
@@ -112,7 +110,6 @@ public class API : MonoBehaviour
             if (timeElapsed >= timeToWait)
             {
                 timeElapsed = 0;
-                stepDone = false;
                 StartCoroutine(MakeStep());
             }
             
@@ -122,6 +119,8 @@ public class API : MonoBehaviour
             }
             
         }
+
+
     }
 
     IEnumerator SendConfiguration()
@@ -150,7 +149,6 @@ public class API : MonoBehaviour
             Debug.Log(www.downloadHandler.text);
             yield return StartCoroutine(UpdateAgents());
             yield return StartCoroutine(UpdateBoxes());
-            stepDone = true;
         }else
         {
             Debug.Log(www.error);

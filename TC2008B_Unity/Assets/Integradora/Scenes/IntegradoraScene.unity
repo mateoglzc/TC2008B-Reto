@@ -41962,6 +41962,8 @@ MonoBehaviour:
   numBoxes: 15
   catBoy: {fileID: 8268164360308683397, guid: 5836415140f2c764fa5f4492427da663, type: 3}
   happyMeal: {fileID: 4061837741100537053, guid: eaa9d3562f02fcd408a3a83e0ebabaa6, type: 3}
+  timeToWait: 1
+  timeElapsed: 0
 --- !u!4 &1670951169
 Transform:
   m_ObjectHideFlags: 0
