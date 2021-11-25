@@ -105,8 +105,12 @@ class WarehouseModel(Model):
         self.prevDsts.append(self.boxDst)
         self.boxDst = newBoxDst
     
+<<<<<<< HEAD
 
     def update_neighbors(self):
+=======
+    def updateNeighbors(self):
+>>>>>>> MattDev
         
         for (contents, x, y) in self.grid.coord_iter(): # iterate through each cell
             contents[0].realNeighbors = []
