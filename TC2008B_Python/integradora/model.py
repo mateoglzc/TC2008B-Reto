@@ -186,7 +186,7 @@ class WarehouseModel(Model):
             if isinstance(agent, BoxAgent):
                 count += 1
         
-        if count == 5:
+        if count >= 5:
             self.changeBoxDst()
                 
         
