@@ -84,8 +84,8 @@ Las etapas fuera del ciclo son la planeación y el lanzamiento del proyecto, y p
 
 - [x] **Definición de modelo**
   - **Descripción:** establecer el modelo del sistema multiagente a implementar
-  - **Lapso de tiempo**: 12/11/2021 - 16/11/2021
-  - **Fecha esperada:** 16/11/2021
+  - **Lapso de tiempo**: 12/11/2021 - 25/11/2021
+  - **Fecha esperada:** 25/11/2021
   - **Responsable/s:** Equipo de trabajo
   - **Intervalo de esfuerzo estimado:** Intermedio
 
