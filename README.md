@@ -82,7 +82,7 @@ Las etapas fuera del ciclo son la planeación y el lanzamiento del proyecto, y p
   - **Responsable/s:** Equipo de trabajo
   - **Intervalo de esfuerzo estimado:** Bajo
 
-- [ ] **Definición de modelo**
+- [x] **Definición de modelo**
   - **Descripción:** establecer el modelo del sistema multiagente a implementar
   - **Lapso de tiempo**: 12/11/2021 - 16/11/2021
   - **Fecha esperada:** 16/11/2021
@@ -91,22 +91,22 @@ Las etapas fuera del ciclo son la planeación y el lanzamiento del proyecto, y p
 
 - [ ] **Desarrollo de sistema multiagente**
   - **Descripción:** construcción del modelo con los respectivos agentes reactivos
-  - **Lapso de tiempo**: 17/11/2021 - 26/11/2021
-  - **Fecha esperada:** 26/11/2021
+  - **Lapso de tiempo**: 17/11/2021 - 01/12/2021
+  - **Fecha esperada:** 01/12/2021
   - **Responsable/s:** Diego, Enrique
   - **Intervalo de esfuerzo estimado:** Alto
 
 - [ ] **Implementación de la nube**
   - **Descripción:** Conexión del modelo hacia una liga en la nube
-  - **Lapso de tiempo**: 17/11/2021 - 26/11/2021
-  - **Fecha esperada:** 26/11/2021
+  - **Lapso de tiempo**: 17/11/2021 - 01/12/2021
+  - **Fecha esperada:** 01/12/2021
   - **Responsable/s:** Enrique, Mateo
   - **Intervalo de esfuerzo estimado:** Intermedio
 
 - [ ] **Visualización de Unity**
   - **Descripción:** Aplicar gráficas computacionales para la visualización de la simulación
-  - **Lapso de tiempo**: 22/11/2021 - 26/11/2021
-  - **Fecha esperada:** 30/11/2021
+  - **Lapso de tiempo**: 22/11/2021 - 01/12/2021
+  - **Fecha esperada:** 01/12/2021
   - **Responsable/s:** Diego, Mateo
   - **Intervalo de esfuerzo estimado:** Alto
 
@@ -128,3 +128,5 @@ Las etapas fuera del ciclo son la planeación y el lanzamiento del proyecto, y p
 - Modelación de figuras 3D a través de herramientas computacionales
 - Uso de Unity y C# para la modelación y movimiento de figuras 3D
 - Iluminación en un ambiente 3D y sus interacciones con distintas superficies
+- Conexión del sistema multiagente haciendo uso de gráficas
+- Traslación y rotación de modelos 3D
