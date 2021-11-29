@@ -10,6 +10,11 @@ def h(src, dst):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
+class TrafficLightAgent(Agent):
+    def __init__(self, unique_id, model, state):
+        super().__init__(unique_id, model)
+        self.state = state
+
 class TileAgent(Agent):
     def __init__(self, unique_id, model, direction):
         super().__init__(unique_id, model)
@@ -22,9 +27,10 @@ class CarAgent(Agent):
     def __init__(self, unique_id, model, boxDst):
         super().__init__(unique_id, model)
         self.direction = 0
-        self.carDestination = ()
+        self.destination = ()
         self.blinkers = [False, False]
         self.numMoves = 0
+        self.path = []
     
     def getDirection(self, nextStep) -> int:
 
@@ -45,7 +51,7 @@ class CarAgent(Agent):
             return 90
 
 
-    def findPathTo(self, dst):
+    def findPathTo(self, dst) -> bool:
         self.path = []
         count = 0
         open_set = PriorityQueue()
@@ -91,89 +97,26 @@ class CarAgent(Agent):
     
 
     def move(self):
-        self.model.updateNeighbors()
-        near = self.model.grid.get_neighborhood(
-                self.pos,
-                moore=False, # don't include diagonal neighbors
-                include_center=False) #Doesn't include its own position
 
-
-        if self.hasBox and self.boxDst not in near:
-            foundPath = self.findPathTo(self.boxDst)
-
-            if foundPath:
-                self.direction = self.getDirection(self.path[-1])
-                self.model.grid.move_agent(self, self.path.pop())
-                self.numMoves += 1
+        if not self.path:
+            self.findPathTo(self.destination)
         
+        nextPos = self.path[-1]
+        self.direction = self.getDirection(nextPos)
+        carInFront = False
+        redLight = False
+        for agent in self.model.grid.get_cell_list_contents(nextPos):
+            if isinstance(agent, TrafficLightAgent) and agent.state == "red":
+                redLight = True
 
-        elif self.boxSrc and self.boxSrc not in near:
-            
-            foundPath = self.findPathTo(self.boxSrc)
-
-            if foundPath:
-                self.direction = self.getDirection(self.path[-1])
-                self.model.grid.move_agent(self, self.path.pop())
-                self.numMoves += 1
-
-        else:
-            possible = [cell.pos for cell in self.model.grid.get_cell_list_contents(self.pos)[0].realNeighbors]
-            if len(possible) > 0:
-                newPos = self.model.random.choice(possible)
-                self.direction = self.getDirection(newPos)
-                self.model.grid.move_agent(self, newPos)
-                self.numMoves += 1
+            if isinstance(agent, CarAgent):
+                carInFront = True
+                break
+        
+        if not carInFront and not redLight:
+            self.model.grid.move_agent(self, self.path.pop())
     
 
     def step(self):
-        #get direct neighbors
-        near = self.model.grid.get_neighborhood(
-                self.pos,
-                moore=False, # don't include diagonal neighbors
-                include_center=True) #Doesn't include its own position
-
-
-        # if agent has a box and box destination is near 
-        if self.hasBox and self.boxDst in near:
-            a = BoxAgent(self.boxId, self) # create instance of box agent
-            self.model.schedule.add(a) # add it to the schedule
-            self.model.grid.place_agent(a, self.boxDst) # place BoxAgent in box destination
-            self.hasBox = False
-            self.boxSrc = None
-
-        if not self.hasBox:
-            fourNeighbors = self.model.grid.iter_neighbors(
-            self.pos,
-            moore=True, # don't include diagonal neighbors
-            include_center=False,
-            radius=4) #Doesn't include its own position
-
-            # Detect box in 4 cell range
-            for cell in fourNeighbors:
-                for agent in self.model.grid.get_cell_list_contents([cell.pos]):
-                    if isinstance(agent, BoxAgent) and agent.pos != self.boxDst and agent.pos not in self.model.prevDsts:
-                            self.boxSrc = agent.pos
-                            break
-                        
-                        
-                
-            
-            near = self.model.grid.iter_neighbors(
-                self.pos,
-                moore=False, # don't include diagonal neighbors
-                include_center=True) #Doesn't include its own position
-
-            # Pick up box if one is near
-            for cell in near:
-                for agent in self.model.grid.get_cell_list_contents([cell.pos]):
-                    if isinstance(agent, BoxAgent) and agent.pos != self.boxDst and not self.hasBox and agent.pos not in self.model.prevDsts:
-                        self.hasBox = True
-                        self.boxId = agent.unique_id
-                        self.model.grid._remove_agent(agent.pos, agent)
-                        self.model.schedule.remove(agent)
-                        break
-                
-                if self.hasBox:
-                    break
         
         self.move()
