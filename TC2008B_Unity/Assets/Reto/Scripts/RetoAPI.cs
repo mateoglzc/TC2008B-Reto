@@ -14,22 +14,39 @@ public class Car
     public int direction = 0;
 }
 
+[Serializable]
+public class TrafficLight
+{
+    public float x;
+    public float y;
+    public float z;
+
+    public bool stop; // True -> Red Light, False -> Green Light
+}
+
 public class RetoAPI : MonoBehaviour
 {
 
     [SerializeField] int numCars;
     [SerializeField] string url;
     [SerializeField] string getCarsEP;
+    [SerializeField] string getTrafficLightsEP;
+    [SerializeField] string updateTrafficLightsEP;
     [SerializeField] string configEP;
     [SerializeField] string testEP;
-    [SerializeField] GameObject donkey;
+    [SerializeField] GameObject car;
+    [SerializeField] GameObject trafficLight;
     [SerializeField] float timeToWait;
     [SerializeField] float timeElapsed;
 
+    int numTrafficLights = 10;
     bool gotCars;
 
     Car[] cars;
     GameObject[] carGroup;
+
+    TrafficLight[] trafficLights;
+    GameObject[] trafficLightGroup;
 
     List<Vector3> newPos;
     List<Vector3> oldPos;
@@ -43,6 +60,7 @@ public class RetoAPI : MonoBehaviour
         newPos = new List<Vector3>();
         oldPos = new List<Vector3>();
         carGroup = new GameObject[numCars];
+        trafficLightGroup = new GameObject[numTrafficLights];
 
         // Test Connection
         // Send Configuration
@@ -50,6 +68,7 @@ public class RetoAPI : MonoBehaviour
 
         // Init Cars
         StartCoroutine(InitCars());
+        StartCoroutine(InitTrafficLights());
         
     }
 
@@ -81,13 +100,11 @@ public class RetoAPI : MonoBehaviour
 
         if (www.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log(www.downloadHandler.text);
             cars = JsonHelper.FromJson<Car>(www.downloadHandler.text);
             for (int i = 0; i < numCars; i++)
             {
-                // Update direction
-                Vector3 temp = new Vector3(cars[i].x, cars[i].y, cars[i].z);
-                carGroup[i] = Instantiate(donkey, temp, Quaternion.identity);
+                Vector3 pos = new Vector3(cars[i].x, cars[i].y, cars[i].z);
+                carGroup[i] = Instantiate(car, pos, Quaternion.identity);
                 carGroup[i].transform.rotation = Quaternion.Euler(0, cars[i].direction, 0);
             }
             gotCars = true;
@@ -95,5 +112,70 @@ public class RetoAPI : MonoBehaviour
         {
             Debug.Log(www.error);
         }
+    }
+
+    IEnumerator UpdateCars()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url + getCarsEP);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            cars = JsonHelper.FromJson<Car>(www.downloadHandler.text);
+            for (int i = 0; i < numCars; i++)
+            {
+                Vector3 pos = new Vector3(cars[i].x, cars[i].y, cars[i].z);
+                carGroup[i].transform.rotation = Quaternion.Euler(0, cars[i].direction, 0);
+                oldPos.Add(carGroup[i].transform.position);
+                newPos.Add(pos);
+            }
+        }else
+        {
+            Debug.Log(www.error);
+        }
+    }
+
+    IEnumerator InitTrafficLights()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url + getTrafficLightsEP);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            trafficLights = JsonHelper.FromJson<TrafficLight>(www.downloadHandler.text);
+            for (int i = 0; i < numTrafficLights; i++)
+            {
+                Vector3 pos = new Vector3(trafficLights[i].x, trafficLights[i].y, trafficLights[i].z);
+                trafficLightGroup[i] = Instantiate(trafficLight, pos, Quaternion.identity);
+            }
+        }else
+        {
+            Debug.Log(www.error);
+        }
+    }
+
+    IEnumerator updateLights()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url + updateTrafficLightsEP);
+        yield return www.SendWebRequest();
+        
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            bool light;
+            trafficLights = JsonHelper.FromJson<TrafficLight>(www.downloadHandler.text);
+            for (int i = 0; i < numTrafficLights; i++)
+            {
+
+                light = (trafficLights[i].stop) ? true : false;
+                // Traffic Light is supposes to be in green
+                trafficLightGroup[i].transform.GetChild(2).GetChild(0).gameObject.SetActive(!light);
+                trafficLightGroup[i].transform.GetChild(2).GetChild(2).gameObject.SetActive(light);
+
+            }
+        }else
+        {
+            Debug.Log(www.error);
+        }
+
     }
 }
