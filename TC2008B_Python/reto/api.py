@@ -23,6 +23,17 @@ def getCars():
     """Get Car Agents"""
     return ""
 
+@app.route('/getTL')
+def getTrafficLights():
+    """Get Traffic Lights"""
+    return ""
+
+@app.route('/updateTL')
+def updateTrafficLights():
+    """Update Traffic Lights"""
+    return ""
+
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port, debug=True)
