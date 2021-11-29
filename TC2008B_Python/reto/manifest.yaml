@@ -1,0 +1,4 @@
+applications:
+- name: RetoTC2008B
+  random-route: true
+  memory: 128M
