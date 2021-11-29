@@ -1,0 +1,16 @@
+{
+    ">" : 270,
+    "<" : 90,
+    "l" : "green",
+    "r" : "green",
+    "u" : "green",
+    "b" : "green",
+    "L" : "red",
+    "R" : "red",
+    "U" : "red",
+    "B" : "red",
+    "#" : "Obstacle",
+    "v" : 0,
+    "^" : 180,
+    "D" : "Destination"
+}
