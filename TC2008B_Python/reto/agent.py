@@ -1,5 +1,4 @@
 from mesa import Agent
-from collections import defaultdict
 from queue import PriorityQueue
 
 
@@ -10,26 +9,39 @@ def h(src, dst):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-class TrafficLightAgent(Agent):
-    def __init__(self, unique_id, model, state):
+class Destination(Agent):
+    def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.state = state
 
-class TileAgent(Agent):
+
+class Obstacle(Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+
+
+class Road(Agent):
     def __init__(self, unique_id, model, direction):
         super().__init__(unique_id, model)
         self.realNeighbors = []
         self.direction = direction
-        self.isCarDestination = False
         self.hasCar = False
+        
+
+class TrafficLightAgent(Agent):
+    def __init__(self, unique_id, model, state, timeToChange = 10):
+        super().__init__(unique_id, model)
+        self.state = state
+        self.timeToChange = timeToChange
+
 
 class CarAgent(Agent):
-    def __init__(self, unique_id, model, boxDst):
+    def __init__(self, unique_id, model, destination):
         super().__init__(unique_id, model)
         self.direction = 0
-        self.destination = ()
+        self.destination = destination
         self.blinkers = [False, False]
         self.numMoves = 0
+        self.nextPos = None
         self.path = []
     
     def getDirection(self, nextStep) -> int:
@@ -46,7 +58,7 @@ class CarAgent(Agent):
         if nextStep[0] > self.pos[0]:
             return 270
         
-        # face west if moving right 
+        # face west if moving left
         if nextStep[0] < self.pos[0]:
             return 90
 
@@ -115,6 +127,8 @@ class CarAgent(Agent):
         
         if not carInFront and not redLight:
             self.model.grid.move_agent(self, self.path.pop())
+        
+        self.nextPos = self.path[-1]
     
 
     def step(self):

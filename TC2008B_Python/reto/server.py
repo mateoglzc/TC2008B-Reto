@@ -1,9 +1,9 @@
-from model import WarehouseModel, CarAgent, BoxAgent, CarDestination, TileAgent
+from model import WarehouseModel, CarAgent, TrafficLightAgent, Road, Obstacle, Destination
 from mesa.visualization.modules import CanvasGrid, PieChartModule, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
-
+directions = {"down": 0, "up": 180, "left": 90, "right": 270}
 
 def agent_portrayal(agent):
     """Function that defines how each Agent is going to be portrayed visualy"""
@@ -12,53 +12,54 @@ def agent_portrayal(agent):
                  "Layer": 0}
 
     if isinstance(agent, CarAgent):
-        portrayal["Color"] = "red"
+        portrayal["Color"] = "blue"
         portrayal["r"] = 0.5
         portrayal["Layer"] = 1
-        if agent.hasBox:
-            portrayal["Color"] = "green"
     
-    elif isinstance(agent, BoxAgent):
-        portrayal["Shape"] = "rect"
-        portrayal["Color"] = "#944300"
+    elif isinstance(agent, TrafficLightAgent):
+        portrayal["Shape"] = "circle"
+        portrayal["Color"] = agent.state
+        portrayal["r"] = 0.8
         portrayal["Layer"] = 1
-        portrayal["w"] = 0.5
-        portrayal["h"] = 0.5
     
-    elif isinstance(agent, CarDestination):
+    elif isinstance(agent, Road):
+        portrayal["Shape"] = "rect"
+        portrayal["Layer"] = 1
+        portrayal["w"] = 0.9
+        portrayal["h"] = 0.9
+        if agent.direction == directions["right"]:
+            portrayal["Color"] = "#850278" # PURPLE
+        elif agent.direction == directions["left"]:
+            portrayal["Color"] = "#FED3FA" # LIGHT PINK
+        elif agent.direction == directions["up"]:
+            portrayal["Color"] = "#D9F818" # YELLOW
+        elif agent.direction == directions["down"]:
+            portrayal["Color"] = "#FC5CED" # HOT PINK
+        
+        portrayal["Color"] = "grey"
+    
+    elif isinstance(agent, Obstacle):
+        portrayal["Shape"] = "rect"
+        portrayal["Color"] = "black"
+        portrayal["Layer"] = 1
+        portrayal["w"] = 0.9
+        portrayal["h"] = 0.9
+    
+    elif isinstance(agent, Destination):
         portrayal["Shape"] = "rect"
         portrayal["Color"] = "orange"
         portrayal["Layer"] = 1
         portrayal["w"] = 0.9
         portrayal["h"] = 0.9
-    
-    if isinstance(agent, TileAgent):
-        portrayal["Filled"] = False
+
     
 
     return portrayal
 
 
-modelParams = {
-    "width": 10,
-    "height": 10,
-    "seed": UserSettableParameter("slider",
-                                        name="Seed",
-                                        value=5,
-                                        min_value=1,
-                                        max_value=1000),
-    "numBoxes": UserSettableParameter("slider",
-                                        name="Number of Boxes",
-                                        value=5,
-                                        min_value=1,
-                                        max_value=30),
-    "numRobots": UserSettableParameter("slider",
-                                        name="Number of Robots",
-                                        value=1,
-                                        min_value=1,
-                                        max_value=5)}
+modelParams = {}
 
-grid = CanvasGrid(agent_portrayal, modelParams["width"], modelParams["height"], 500, 500)
+grid = CanvasGrid(agent_portrayal, 26, 26, 500, 500)
 
 server = ModularServer(WarehouseModel,
                        [grid],
