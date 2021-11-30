@@ -27,13 +27,13 @@ def agent_portrayal(agent):
         portrayal["Layer"] = 1
         portrayal["w"] = 0.9
         portrayal["h"] = 0.9
-        if agent.direction == directions["right"]:
+        if agent.directions == directions["right"]:
             portrayal["Color"] = "#850278" # PURPLE
-        elif agent.direction == directions["left"]:
+        elif agent.directions == directions["left"]:
             portrayal["Color"] = "#FED3FA" # LIGHT PINK
-        elif agent.direction == directions["up"]:
+        elif agent.directions == directions["up"]:
             portrayal["Color"] = "#D9F818" # YELLOW
-        elif agent.direction == directions["down"]:
+        elif agent.directions == directions["down"]:
             portrayal["Color"] = "#FC5CED" # HOT PINK
         
         portrayal["Color"] = "grey"
@@ -57,7 +57,8 @@ def agent_portrayal(agent):
     return portrayal
 
 
-modelParams = {}
+modelParams = { "numCars": UserSettableParameter("slider", "Number of Cars", value=1, min_value=1, max_value=11, step=1),
+                "seed": UserSettableParameter("slider", "Seed", value=1, min_value=1, max_value=1000, step=1)}
 
 grid = CanvasGrid(agent_portrayal, 26, 26, 500, 500)
 

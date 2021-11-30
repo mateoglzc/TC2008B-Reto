@@ -10,45 +10,102 @@ from agent import CarAgent, TrafficLightAgent, Road, Obstacle, Destination
 from mesa.datacollection import DataCollector
 import time, json
 
-directions = {"down": 0, "up": 180, "left": 90, "right": 270}
-trafficLightDirections = {"l": 90, "L": 90, "r": 270, "R": 270, "u": 180, "U": 180, "b": 0, "B": 0}
+directions = {"down": [0], "up": [180], "left": [90], "right": [270], "up_left": [180, 90], "up_right" : [180, 270], "down_right" : [0, 270], "down_left" : [0, 90]}
+trafficLightDirections = {"l": [90], "L": [90], "r": [270], "R": [270], "u": [180], "U": [180], "b": [0], "B": [0]}
 
 def compatible(road: Road, roadB: Road):
         nx, ny = roadB.pos
         rx, ry = road.pos
+        if road.directions == directions["up_left"]:
+            if nx > rx and ny == ry:
+                return False
+                
+            if ny < ry:
+                return False
+            
+            if nx > rx and ny > ry and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
+                return False
+            
+            return True
+        
+        elif road.directions == directions["up_right"]:
+            if nx < rx and ny == ry:
+                return False
+                
+            if ny < ry:
+                return False
+            
+            if nx < rx and ny > ry and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
+                return False
+            
+            return True
+        
+        elif road.directions == directions["down_right"]:
+            if nx < rx and ny == ry:
+                return False
+                
+            if ny > ry:
+                return False
+            
+            if nx < rx and ny < ry and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
+                return False
+            
+            return True
 
-        if road.direction == directions["right"]:
+        elif road.directions == directions["down_left"]:
+            if nx > rx and ny == ry:
+                return False
+                
+            if ny > ry:
+                return False
+            
+            if nx > rx and ny < ry and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
+                return False
+            
+            return True
+
+
+        elif road.directions == directions["right"]:
             if nx < rx: # if neighbor is to the left
                 return False
             
             if nx == rx and ny != ry: # if neighbor is above or below
                 return False
                         
-            if nx > rx and ny < ry and roadB.direction == directions["up"]: # if neighbor is to the right, below and is facing up
+            if nx > rx and ny < ry and roadB.directions == directions["up"]: # if neighbor is to the right, below and is facing up
+                return False
+            
+            if ny != ry and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
                 return False
             
             return True
         
-        if road.direction == directions["down"]:
+        elif road.directions == directions["down"]:
             if ny > ry: # if neighbor is above
                 return False
             
             if ny == ry and nx != rx: # if neighbor is to the left or right
                 return False
             
-            if nx < rx and ny < ry and roadB.direction == directions["right"]: # if neighbor is to the left, below and facing right
+            if nx < rx and ny < ry and roadB.directions == directions["right"]: # if neighbor is to the left, below and facing right
+                return False
+            
+            if nx != rx and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
                 return False
             
             return True
 
-        if road.direction == directions["left"]:
+        elif road.directions == directions["left"]:
             if nx > rx: # if neighbor is to the right
                 return False
             
             if nx == rx and ny != ry: # if neighbor is above or below
                 return False
             
-            if nx < rx and ny > ry and roadB.direction == directions["down"]:
+            if nx < rx and ny > ry and roadB.directions == directions["down"]:
+                return False
+            
+            if ny != ry and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
                 return False
             
             return True
@@ -60,14 +117,17 @@ def compatible(road: Road, roadB: Road):
             if ny == ry and nx != rx: # if neighbor is to the left or right
                 return False
             
-            if nx > rx and ny > ry and roadB.direction == directions["left"]: # if neighbor is to the right, above and facing left
+            if nx > rx and ny > ry and roadB.directions == directions["left"]: # if neighbor is to the right, above and facing left
+                return False
+            
+            if nx != rx and [1 for i in road.model.grid.get_cell_list_contents(roadB.pos) if isinstance(i, TrafficLightAgent)]:
                 return False
 
             return True
 
 class WarehouseModel(Model):
     """ Model for Roomba simulation """
-    def __init__(self, numCars=11):
+    def __init__(self, numCars=11, seed=None):
         self.numCars = numCars
         self.running = True # For visualization
         self.startTime = None # For keeping track of time
@@ -76,14 +136,14 @@ class WarehouseModel(Model):
             "Moves": lambda m: {agent.unique_id: agent.numMoves for agent in m.schedule.agents if isinstance(agent, CarAgent)},
             "Total Time": lambda m: time.time() - m.startTime
         })
-
+        print(self._seed)
         destinations = set()
         trafficLights = set()
         self.allRoads = set()
-        dataDictionary = json.load(open("mapDictionary.txt"))
+        dataDictionary = json.load(open("mapDictionary.txt", encoding="utf-8-sig"))
 
 
-        with open('base.txt') as baseFile:
+        with open('base1.txt', encoding="utf-8-sig") as baseFile:
             lines = baseFile.readlines()
             self.width = len(lines[0])-1
             self.height = len(lines)
@@ -93,13 +153,14 @@ class WarehouseModel(Model):
 
             for r, row in enumerate(lines):
                 for c, col in enumerate(row):
-                    if col in ["v", "^", ">", "<"]:
-                        agent = Road(f"r{r*self.width+c}", self, int(dataDictionary[col]))
+                    if col in "v^><↖↗↘↙":
+                        agent = Road(f"r{r*self.width+c}", self, dataDictionary[col])
                         self.grid.place_agent(agent, (c, self.height - r - 1))
                         self.allRoads.add(agent)
                         self.schedule.add(agent)
                     elif col in "lrubLRUB":
                         agent = Road(f"r{r*self.width+c}", self, trafficLightDirections[col])
+                        print((c, self.height - r - 1))
                         self.grid.place_agent(agent, (c, self.height - r - 1))
                         self.allRoads.add(agent)
                         self.schedule.add(agent)
@@ -117,7 +178,7 @@ class WarehouseModel(Model):
                         destinations.add(agent.pos)
                         self.schedule.add(agent)
         
-        self.poop = None
+
         roads = self.allRoads.copy()
         self.destinations_copy = destinations.copy()
         for i in range(numCars):
@@ -125,9 +186,11 @@ class WarehouseModel(Model):
             destinations.remove(dst) # remove it from possible destinations
             agent = CarAgent(i+1, self, dst) # create car agent with id, model, destination
             carPos = self.random.choice(list(roads)) # give car random road position
-            self.poop = carPos.pos
+            while len(carPos.directions) > 1:
+                carPos = self.random.choice(list(roads))
+            
             roads.remove(carPos) # remove road from all roads
-            agent.direction = carPos.direction # update car direction
+            agent.direction = carPos.directions[0] # update car direction
             self.grid.place_agent(agent, carPos.pos) # place agent in grid
             self.schedule.add(agent) # add agent to schedule
 
@@ -153,8 +216,7 @@ class WarehouseModel(Model):
                     road.realNeighbors.append(n_agent)
             
 
-            #print(road)
-            #print(self.grid.get_cell_list_contents(road.pos)[0])
+            
 
         
         for dst in self.destinations_copy:

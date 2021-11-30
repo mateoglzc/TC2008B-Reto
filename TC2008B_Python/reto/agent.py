@@ -28,10 +28,10 @@ class Obstacle(Agent):
 
 
 class Road(Agent):
-    def __init__(self, unique_id, model, direction):
+    def __init__(self, unique_id, model, directions: list):
         super().__init__(unique_id, model)
         self.realNeighbors = []
-        self.direction = direction
+        self.directions = directions
         self.hasCar = False
         
 
@@ -94,7 +94,7 @@ class CarAgent(Agent):
         open_set_hash = {start}
 
         near_end = [cell.pos for cell in end.realNeighbors]
-        print(end.pos, near_end)
+        
         while not open_set.empty():
             current = open_set.get()[2]
             open_set_hash.remove(current)
@@ -105,7 +105,6 @@ class CarAgent(Agent):
                     self.path.append(end.pos)
                     end = came_from[end]
 
-                print(self.path)
                 return True
             
             for neighbor in current.realNeighbors:
@@ -153,8 +152,8 @@ class CarAgent(Agent):
             if not carInFront and not redLight:
                 roadA = self.model.grid.get_cell_list_contents(self.pos)[0]
                 roadB = self.model.grid.get_cell_list_contents(self.path[-1])[0]
-                if abs(self.path[-1][0] - self.pos[0]) == 1 and abs(self.path[-1][1] - self.pos[1]) == 1 and roadA.direction != roadB.direction:
-                    inter = intermediate[self.model.grid.get_cell_list_contents(self.pos)[0].direction]
+                if abs(self.path[-1][0] - self.pos[0]) == 1 and abs(self.path[-1][1] - self.pos[1]) == 1 and roadA.directions != roadB.directions:
+                    inter = intermediate[self.model.grid.get_cell_list_contents(self.pos)[0].directions[0]]
                     self.model.grid.move_agent(self, (self.pos[0]+inter[0], self.pos[1]+inter[1]))
                 
                 else:
@@ -164,6 +163,5 @@ class CarAgent(Agent):
     
 
     def step(self):
-        print(self.destination)
         if not self.parked:
             self.move()
