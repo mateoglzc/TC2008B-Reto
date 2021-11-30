@@ -18,6 +18,13 @@ def config() -> str:
     session["Model"] = model.CityModel(numCars)
     return "Configuration Successful"
 
+@app.route("/makeStep")
+def step() -> str:
+    if session["Model"].running:
+        session["Model"].step()
+        return "Step Succesful"
+    return "Finished Simulation"
+
 @app.route('/getCars')
 def getCars():
     """Get Car Agents"""
