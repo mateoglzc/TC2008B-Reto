@@ -21,7 +21,7 @@ public class TrafficLight
     public float y;
     public float z;
 
-    public bool stop; // True -> Red Light, False -> Green Light
+    public string state; // True -> Red Light, False -> Green Light
 }
 
 public class RetoAPI : MonoBehaviour
@@ -31,8 +31,8 @@ public class RetoAPI : MonoBehaviour
     [SerializeField] string url;
     [SerializeField] string getCarsEP;
     [SerializeField] string getTrafficLightsEP;
-    [SerializeField] string updateTrafficLightsEP;
     [SerializeField] string configEP;
+    [SerializeField] string stepEP;
     [SerializeField] string testEP;
     [SerializeField] GameObject car;
     [SerializeField] GameObject trafficLight;
@@ -75,7 +75,20 @@ public class RetoAPI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        timeElapsed += Time.deltaTime;
+        if (gotCars){
+            float t = timeElapsed/timeToWait;
+            if (timeElapsed >= timeToWait)
+            {
+                timeElapsed = 0;
+                StartCoroutine(MakeStep());
+            }
+            
+            for (int i = 0; i < carGroup.Length; i++)
+            {
+                carGroup[i].transform.position = Vector3.Lerp(carGroup[i].transform.position, newPos[i], t);
+            }
+        }
     }
 
     IEnumerator SendConfiguration()
@@ -154,9 +167,9 @@ public class RetoAPI : MonoBehaviour
         }
     }
 
-    IEnumerator updateLights()
+    IEnumerator UpdateLights()
     {
-        UnityWebRequest www = UnityWebRequest.Get(url + updateTrafficLightsEP);
+        UnityWebRequest www = UnityWebRequest.Get(url +  getTrafficLightsEP);
         yield return www.SendWebRequest();
         
         if (www.result == UnityWebRequest.Result.Success)
@@ -166,10 +179,10 @@ public class RetoAPI : MonoBehaviour
             for (int i = 0; i < numTrafficLights; i++)
             {
 
-                light = (trafficLights[i].stop) ? true : false;
+                light = (trafficLights[i].state == "green") ? true : false;
                 // Traffic Light is supposes to be in green
-                trafficLightGroup[i].transform.GetChild(2).GetChild(0).gameObject.SetActive(!light);
-                trafficLightGroup[i].transform.GetChild(2).GetChild(2).gameObject.SetActive(light);
+                trafficLightGroup[i].transform.GetChild(0).GetChild(2).GetChild(0).gameObject.SetActive(light);
+                trafficLightGroup[i].transform.GetChild(0).GetChild(2).GetChild(2).gameObject.SetActive(!light);
 
             }
         }else
@@ -177,5 +190,20 @@ public class RetoAPI : MonoBehaviour
             Debug.Log(www.error);
         }
 
+    }
+    IEnumerator MakeStep()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url + stepEP);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            yield return StartCoroutine(UpdateCars());
+            yield return StartCoroutine(UpdateLights());
+        }else
+        {
+            Debug.Log(www.error);
+        }
     }
 }
