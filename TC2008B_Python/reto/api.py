@@ -1,37 +1,34 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session, request
+import model
 import os
 
 app = Flask("Windmill")
 app.config['SECRET_KEY'] = "helloImTheSecretBetYouCantCrackMeLalalalalalWazzupNoQueMuyHacker"
 port = int(os.getenv('PORT', 8000))
 
-@app.route('/')
-def home() -> str:
-    return "This is my quest, to follow that star. No matter how hopeles, no matter how far."
-
-@app.route('/test')
+@app.route('/test', methods=["GET"])
 def test() -> str:
     """Test Connection"""
     return "Connection Established"
 
-@app.route('/config')
+@app.route('/config', methods=["POST"])
 def config() -> str:
+    """Recieve model configuration and create model"""
+    numCars = int(request.form.get("numCars"))
+    session["Model"] = model.CityModel(numCars)
     return "Configuration Successful"
 
 @app.route('/getCars')
 def getCars():
     """Get Car Agents"""
-    return ""
+    model = session["Model"]
+    return jsonify({"Items" : model.getCars()})
 
 @app.route('/getTL')
 def getTrafficLights():
     """Get Traffic Lights"""
-    return ""
-
-@app.route('/updateTL')
-def updateTrafficLights():
-    """Update Traffic Lights"""
-    return ""
+    model = session["Model"]
+    return jsonify({"Items" : model.getTrafficLights()})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port, debug=True)
