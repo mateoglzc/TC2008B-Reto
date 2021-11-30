@@ -137,15 +137,15 @@ class CarAgent(Agent):
                 self.findPathTo(self.destination)
             
             
-            nextPos = self.path[-1]
-            self.direction = self.getDirection(nextPos)
+            self.nextPos = self.path[-1]
+            self.direction = self.getDirection(self.nextPos)
             carInFront = False
             redLight = False
-            for agent in self.model.grid.get_cell_list_contents(nextPos):
+            for agent in self.model.grid.get_cell_list_contents(self.nextPos):
                 if isinstance(agent, TrafficLightAgent) and agent.state == "red":
                     redLight = True
 
-                if isinstance(agent, CarAgent):
+                if isinstance(agent, CarAgent) and agent.nextPos == self.nextPos:
                     carInFront = True
                     break
             
@@ -158,8 +158,13 @@ class CarAgent(Agent):
                 
                 else:
                     self.model.grid.move_agent(self, self.path.pop())
+                
+                self.numMoves += 1
+
+            else:
+                self.nextPos = self.pos
         
-        #self.nextPos = self.path[-1]
+        #self.self.nextPos = self.path[-1]
     
 
     def step(self):

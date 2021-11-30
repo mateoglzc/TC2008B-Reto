@@ -149,7 +149,7 @@ class WarehouseModel(Model):
             self.height = len(lines)
 
             self.grid = MultiGrid(self.width, self.height,torus = False) 
-            self.schedule = RandomActivation(self)
+            self.schedule = SimultaneousActivation(self)
 
             for r, row in enumerate(lines):
                 for c, col in enumerate(row):
@@ -160,7 +160,6 @@ class WarehouseModel(Model):
                         self.schedule.add(agent)
                     elif col in "lrubLRUB":
                         agent = Road(f"r{r*self.width+c}", self, trafficLightDirections[col])
-                        print((c, self.height - r - 1))
                         self.grid.place_agent(agent, (c, self.height - r - 1))
                         self.allRoads.add(agent)
                         self.schedule.add(agent)

@@ -60,11 +60,11 @@ def agent_portrayal(agent):
 modelParams = { "numCars": UserSettableParameter("slider", "Number of Cars", value=1, min_value=1, max_value=11, step=1),
                 "seed": UserSettableParameter("slider", "Seed", value=1, min_value=1, max_value=1000, step=1)}
 
-grid = CanvasGrid(agent_portrayal, 26, 26, 500, 500)
+grid = CanvasGrid(agent_portrayal, 26, 26, 494, 494)
 
 server = ModularServer(WarehouseModel,
                        [grid],
-                       "Box Stacking Robot",
+                       "Traffic Simulation",
                        modelParams)
 
 server.port = 8521 # The default
