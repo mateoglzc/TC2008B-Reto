@@ -1,7 +1,8 @@
 from mesa import Agent
 from queue import PriorityQueue
 
-
+directions = {"down": 0, "up": 180, "left": 90, "right": 270}
+intermediate = {directions["down"]: (0, -1), directions["up"]: (0, 1), directions["left"]: (-1, 0), directions["right"]: (1, 0)}
 
 def h(src, dst):
     x1, y1 = src
@@ -12,7 +13,14 @@ def h(src, dst):
 class Destination(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
+        self.realNeighbors = []
+        self.hasCar = False
 
+    def step(self):
+        if not self.hasCar:
+            for agent in self.model.grid.get_cell_list_contents(self.pos):
+                if isinstance(agent, CarAgent):
+                    self.hasCar = True
 
 class Obstacle(Agent):
     def __init__(self, unique_id, model):
@@ -32,6 +40,13 @@ class TrafficLightAgent(Agent):
         super().__init__(unique_id, model)
         self.state = state
         self.timeToChange = timeToChange
+        self.numSteps = 0
+        self.reverse = {"green": "red", "red": "green"}
+    
+    def step(self):
+        self.numSteps += 1
+        if self.numSteps % self.timeToChange == 0:
+            self.state = self.reverse[self.state]
 
 
 class CarAgent(Agent):
@@ -43,6 +58,7 @@ class CarAgent(Agent):
         self.numMoves = 0
         self.nextPos = None
         self.path = []
+        self.parked = False
     
     def getDirection(self, nextStep) -> int:
 
@@ -78,20 +94,20 @@ class CarAgent(Agent):
         open_set_hash = {start}
 
         near_end = [cell.pos for cell in end.realNeighbors]
-
+        print(end.pos, near_end)
         while not open_set.empty():
             current = open_set.get()[2]
             open_set_hash.remove(current)
 
-            
             if current.pos in near_end:
                 end = current
                 while end in came_from:
                     self.path.append(end.pos)
                     end = came_from[end]
 
+                print(self.path)
                 return True
-                
+            
             for neighbor in current.realNeighbors:
                 temp_g_score = g_score[current] + 1
 
@@ -109,28 +125,45 @@ class CarAgent(Agent):
     
 
     def move(self):
+        end = self.model.grid.get_cell_list_contents(self.destination)[0]
+        near_end = [cell.pos for cell in end.realNeighbors]
+        
+        if self.pos in near_end:
+            self.model.grid.move_agent(self, end.pos)
+            self.parked = True
+        
+        if not self.parked:
+            if not self.path:
+                self.model.updateNeighbors()
+                self.findPathTo(self.destination)
+            
+            
+            nextPos = self.path[-1]
+            self.direction = self.getDirection(nextPos)
+            carInFront = False
+            redLight = False
+            for agent in self.model.grid.get_cell_list_contents(nextPos):
+                if isinstance(agent, TrafficLightAgent) and agent.state == "red":
+                    redLight = True
 
-        if not self.path:
-            self.findPathTo(self.destination)
+                if isinstance(agent, CarAgent):
+                    carInFront = True
+                    break
+            
+            if not carInFront and not redLight:
+                roadA = self.model.grid.get_cell_list_contents(self.pos)[0]
+                roadB = self.model.grid.get_cell_list_contents(self.path[-1])[0]
+                if abs(self.path[-1][0] - self.pos[0]) == 1 and abs(self.path[-1][1] - self.pos[1]) == 1 and roadA.direction != roadB.direction:
+                    inter = intermediate[self.model.grid.get_cell_list_contents(self.pos)[0].direction]
+                    self.model.grid.move_agent(self, (self.pos[0]+inter[0], self.pos[1]+inter[1]))
+                
+                else:
+                    self.model.grid.move_agent(self, self.path.pop())
         
-        nextPos = self.path[-1]
-        self.direction = self.getDirection(nextPos)
-        carInFront = False
-        redLight = False
-        for agent in self.model.grid.get_cell_list_contents(nextPos):
-            if isinstance(agent, TrafficLightAgent) and agent.state == "red":
-                redLight = True
-
-            if isinstance(agent, CarAgent):
-                carInFront = True
-                break
-        
-        if not carInFront and not redLight:
-            self.model.grid.move_agent(self, self.path.pop())
-        
-        self.nextPos = self.path[-1]
+        #self.nextPos = self.path[-1]
     
 
     def step(self):
-        
-        self.move()
+        print(self.destination)
+        if not self.parked:
+            self.move()
