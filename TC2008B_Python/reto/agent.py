@@ -32,7 +32,6 @@ class Road(Agent):
         super().__init__(unique_id, model)
         self.realNeighbors = []
         self.directions = directions
-        self.hasCar = False
         
 
 class TrafficLightAgent(Agent):
