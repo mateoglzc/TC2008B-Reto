@@ -11,6 +11,11 @@ public class Car
     public float y;
     public float z;
 
+    public void print()
+    {
+        Debug.Log(String.Format("{0} {1} {2}", x, y, z));
+    }
+
     public int direction = 0;
 }
 
@@ -21,7 +26,7 @@ public class TrafficLight
     public float y;
     public float z;
 
-    public string state; // True -> Red Light, False -> Green Light
+    public string state; 
 }
 
 public class RetoAPI : MonoBehaviour
@@ -39,7 +44,7 @@ public class RetoAPI : MonoBehaviour
     [SerializeField] float timeToWait;
     [SerializeField] float timeElapsed;
 
-    int numTrafficLights = 10;
+    int numTrafficLights = 28;
     bool gotCars;
 
     Car[] cars;
@@ -61,6 +66,8 @@ public class RetoAPI : MonoBehaviour
         oldPos = new List<Vector3>();
         carGroup = new GameObject[numCars];
         trafficLightGroup = new GameObject[numTrafficLights];
+
+        Debug.Log("Variables Init");
 
         // Test Connection
         // Send Configuration
@@ -86,7 +93,9 @@ public class RetoAPI : MonoBehaviour
             
             for (int i = 0; i < carGroup.Length; i++)
             {
-                carGroup[i].transform.position = Vector3.Lerp(carGroup[i].transform.position, newPos[i], t);
+                // carGroup[i].transform.position = Vector3.Lerp(carGroup[i].transform.position, newPos[i], t);
+                // carGroup[i].transform.position = newPos[i];
+                // Debug.Log(carGroup[i].transform.position);
             }
         }
     }
@@ -137,8 +146,10 @@ public class RetoAPI : MonoBehaviour
             cars = JsonHelper.FromJson<Car>(www.downloadHandler.text);
             for (int i = 0; i < numCars; i++)
             {
+
                 Vector3 pos = new Vector3(cars[i].x, cars[i].y, cars[i].z);
                 carGroup[i].transform.rotation = Quaternion.Euler(0, cars[i].direction, 0);
+                carGroup[i].transform.position = pos;
                 oldPos.Add(carGroup[i].transform.position);
                 newPos.Add(pos);
             }
