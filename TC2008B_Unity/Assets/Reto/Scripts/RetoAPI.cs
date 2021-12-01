@@ -46,6 +46,7 @@ public class RetoAPI : MonoBehaviour
 
     int numTrafficLights = 28;
     bool gotCars;
+    bool stepDone;
 
     Car[] cars;
     GameObject[] carGroup;
@@ -61,6 +62,7 @@ public class RetoAPI : MonoBehaviour
     {
         // Init variables
         gotCars = false;
+        stepDone = false;
         timeToWait = 1;
         newPos = new List<Vector3>();
         oldPos = new List<Vector3>();
@@ -87,15 +89,18 @@ public class RetoAPI : MonoBehaviour
             float t = timeElapsed/timeToWait;
             if (timeElapsed >= timeToWait)
             {
+                stepDone = false;
                 timeElapsed = 0;
                 StartCoroutine(MakeStep());
             }
-            
-            for (int i = 0; i < carGroup.Length; i++)
+            if (stepDone)
             {
-                // carGroup[i].transform.position = Vector3.Lerp(carGroup[i].transform.position, newPos[i], t);
-                // carGroup[i].transform.position = newPos[i];
-                // Debug.Log(carGroup[i].transform.position);
+                for (int i = 0; i < carGroup.Length; i++)
+                {
+                    carGroup[i].transform.position = Vector3.Lerp(oldPos[i], newPos[i], t);
+                    // carGroup[i].transform.position = newPos[i];
+                    // Debug.Log(carGroup[i].transform.position);
+                }
             }
         }
     }
@@ -144,12 +149,14 @@ public class RetoAPI : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             cars = JsonHelper.FromJson<Car>(www.downloadHandler.text);
+            oldPos.Clear();
+            newPos.Clear();
             for (int i = 0; i < numCars; i++)
             {
 
                 Vector3 pos = new Vector3(cars[i].x, cars[i].y, cars[i].z);
                 carGroup[i].transform.rotation = Quaternion.Euler(0, cars[i].direction, 0);
-                carGroup[i].transform.position = pos;
+                // carGroup[i].transform.position = pos;
                 oldPos.Add(carGroup[i].transform.position);
                 newPos.Add(pos);
             }
@@ -212,6 +219,7 @@ public class RetoAPI : MonoBehaviour
             Debug.Log(www.downloadHandler.text);
             yield return StartCoroutine(UpdateCars());
             yield return StartCoroutine(UpdateLights());
+            stepDone = true;
         }else
         {
             Debug.Log(www.error);
