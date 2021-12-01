@@ -270,7 +270,7 @@ class TrafficModel(Model):
 
     def getTrafficLights(self):
         """Build Json object which represents each Traffic Light Agent"""
-        trafficLights = [(agnt.unique_id, (x, y, agnt.state)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, TrafficLightAgent)]
+        trafficLights = [(agnt.unique_id, (x, y, agnt.state, agnt.direction)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, TrafficLightAgent)]
         trafficLights.sort(key=lambda x : x[0])
-        trafficLightJson = [{"x" : tl[1][0], "y" : 0, "z" : tl[1][1], "state" : tl[1][2]} for tl in trafficLights]
+        trafficLightJson = [{"x" : tl[1][0], "y" : 0, "z" : tl[1][1], "state" : tl[1][2], "direction" : tl[1][3]} for tl in trafficLights]
         return trafficLightJson

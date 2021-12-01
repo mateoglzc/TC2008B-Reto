@@ -11,11 +11,6 @@ public class Car
     public float y;
     public float z;
 
-    public void print()
-    {
-        Debug.Log(String.Format("{0} {1} {2}", x, y, z));
-    }
-
     public int direction = 0;
 }
 
@@ -27,6 +22,8 @@ public class TrafficLight
     public float z;
 
     public string state; 
+
+    public int direction = 0;
 }
 
 public class RetoAPI : MonoBehaviour
@@ -178,6 +175,7 @@ public class RetoAPI : MonoBehaviour
             {
                 Vector3 pos = new Vector3(trafficLights[i].x, trafficLights[i].y, trafficLights[i].z);
                 trafficLightGroup[i] = Instantiate(trafficLight, pos, Quaternion.identity);
+                trafficLightGroup[i].transform.rotation = Quaternion.Euler(0, trafficLights[i].direction, 0);
             }
         }else
         {
