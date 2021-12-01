@@ -163,7 +163,7 @@ class TrafficModel(Model):
                         self.grid.place_agent(agent, (c, self.height - r - 1))
                         self.allRoads.add(agent)
                         self.schedule.add(agent)
-                        agent = TrafficLightAgent(f"tl{r*self.width+c}", self, dataDictionary[col])
+                        agent = TrafficLightAgent(f"tl{r*self.width+c}", self, dataDictionary[col], agent.directions[0]-180)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
                         self.schedule.add(agent)
                         trafficLights.add(agent)
