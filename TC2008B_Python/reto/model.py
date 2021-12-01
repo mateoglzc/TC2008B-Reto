@@ -125,7 +125,7 @@ def compatible(road: Road, roadB: Road):
 
             return True
 
-class WarehouseModel(Model):
+class TrafficModel(Model):
     """ Model for Roomba simulation """
     def __init__(self, numCars=11, seed=None):
         self.numCars = numCars
@@ -213,10 +213,6 @@ class WarehouseModel(Model):
 
                 if not containsObstacle:
                     road.realNeighbors.append(n_agent)
-            
-
-            
-
         
         for dst in self.destinations_copy:
             dst_a = self.grid.get_cell_list_contents(dst)[0]
@@ -268,12 +264,13 @@ class WarehouseModel(Model):
         """Build Json object which represents each Car Agent"""
         cars = [(agnt.unique_id, (x, y, agnt.direction)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, CarAgent)]
         cars.sort(key=lambda x : x[0])
-        carJson = [{"x" : car[1][0], "y" : car[1][1], "direction" : car[1][2]} for car in cars]
+        carJson = [{"x" : car[1][0], "y" : 0, "z" : car[1][1], "direction" : car[1][2]} for car in cars]
+        print(carJson)
         return carJson
 
     def getTrafficLights(self):
         """Build Json object which represents each Traffic Light Agent"""
         trafficLights = [(agnt.unique_id, (x, y, agnt.state)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, TrafficLightAgent)]
         trafficLights.sort(key=lambda x : x[0])
-        trafficLightJson = [{"x" : tl[1][0], "y" : tl[1][1], "state" : tl[1][2]} for tl in trafficLights]
+        trafficLightJson = [{"x" : tl[1][0], "y" : 0, "z" : tl[1][1], "state" : tl[1][2]} for tl in trafficLights]
         return trafficLightJson
