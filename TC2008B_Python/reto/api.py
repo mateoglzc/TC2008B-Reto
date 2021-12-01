@@ -5,6 +5,7 @@ import os
 app = Flask("Windmill")
 app.config['SECRET_KEY'] = "helloImTheSecretBetYouCantCrackMeLalalalalalWazzupNoQueMuyHacker"
 port = int(os.getenv('PORT', 8000))
+global mdl
 
 @app.route('/test', methods=["GET"])
 def test() -> str:
@@ -14,28 +15,33 @@ def test() -> str:
 @app.route('/config', methods=["POST"])
 def config() -> str:
     """Recieve model configuration and create model"""
-    numCars = int(request.form.get("numCars"))
-    session["Model"] = model.CityModel(numCars)
+    global mdl
+    numCars = int(request.form.get("numCars")) # Error
+    mdl = model.TrafficModel(numCars)
     return "Configuration Successful"
 
 @app.route("/makeStep")
 def step() -> str:
-    if session["Model"].running:
-        session["Model"].step()
+    global mdl
+    if mdl.running:
+        mdl.step()
         return "Step Succesful"
     return "Finished Simulation"
 
 @app.route('/getCars')
 def getCars():
     """Get Car Agents"""
-    model = session["Model"]
+    global mdl
+    model = mdl
     return jsonify({"Items" : model.getCars()})
 
 @app.route('/getTL')
 def getTrafficLights():
     """Get Traffic Lights"""
-    model = session["Model"]
+    global mdl
+    model = mdl
     return jsonify({"Items" : model.getTrafficLights()})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port, debug=True)
+    # app.run()

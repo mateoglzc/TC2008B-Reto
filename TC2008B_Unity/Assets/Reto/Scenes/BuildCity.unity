@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1776
+  m_Name: pb_Mesh-1232
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -293,7 +293,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1764
+  m_Name: pb_Mesh-1220
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -457,7 +457,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1840
+  m_Name: pb_Mesh-1296
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -704,7 +704,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1800
+  m_Name: pb_Mesh-1256
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1125,7 +1125,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1828
+  m_Name: pb_Mesh-1284
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1283,13 +1283,18 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &687907889 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1767957411238857891, guid: ce695772653652847be0ce8dee3871f4, type: 3}
+  m_PrefabInstance: {fileID: 4432263993030137607}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &939197703
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1752
+  m_Name: pb_Mesh-1208
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1617,7 +1622,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1788
+  m_Name: pb_Mesh-1244
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1804,15 +1809,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de5d7dbd183e5fe46a151685ef8ff997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numCars: 0
-  url: 
+  numCars: 2
+  url: http://RetoTC2008B-resplendent-lynx-pw.mybluemix.net/
   getCarsEP: getCars
   getTrafficLightsEP: getTL
-  updateTrafficLightsEP: updateTL
   configEP: config
+  stepEP: makeStep
   testEP: test
-  car: {fileID: 0}
-  trafficLight: {fileID: 0}
+  car: {fileID: 687907889}
+  trafficLight: {fileID: 2110438792}
   timeToWait: 0
   timeElapsed: 0
 --- !u!4 &997732294
@@ -2108,7 +2113,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1856
+  m_Name: pb_Mesh-1312
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2600,7 +2605,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1812
+  m_Name: pb_Mesh-1268
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2764,7 +2769,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1868
+  m_Name: pb_Mesh-1324
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2922,6 +2927,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &2110438792 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9094172375424531201, guid: 7afeb3d95396ce941b15e23d5c09e6ce, type: 3}
+  m_PrefabInstance: {fileID: 9094172376059834317}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4432263993030137607
 PrefabInstance:
   m_ObjectHideFlags: 0
