@@ -263,3 +263,17 @@ class WarehouseModel(Model):
             self.stopRunning()
             
         self.schedule.step()
+
+    def getCars(self):
+        """Build Json object which represents each Car Agent"""
+        cars = [(agnt.unique_id, (x, y, agnt.direction)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, CarAgent)]
+        cars.sort(key=lambda x : x[0])
+        carJson = [{"x" : car[1][0], "y" : car[1][1], "direction" : car[1][2]} for car in cars]
+        return carJson
+
+    def getTrafficLights(self):
+        """Build Json object which represents each Traffic Light Agent"""
+        trafficLights = [(agnt.unique_id, (x, y, agnt.state)) for content, x, y in self.grid.coord_iter() for agnt in content if isinstance(agnt, TrafficLightAgent)]
+        trafficLights.sort(key=lambda x : x[0])
+        trafficLightJson = [{"x" : tl[1][0], "y" : tl[1][1], "state" : tl[1][2]} for tl in trafficLights]
+        return trafficLightJson
