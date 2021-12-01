@@ -1,4 +1,4 @@
-from model import WarehouseModel, CarAgent, TrafficLightAgent, Road, Obstacle, Destination
+from model import TrafficModel, CarAgent, TrafficLightAgent, Road, Obstacle, Destination
 from mesa.visualization.modules import CanvasGrid, PieChartModule, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
@@ -62,7 +62,7 @@ modelParams = { "numCars": UserSettableParameter("slider", "Number of Cars", val
 
 grid = CanvasGrid(agent_portrayal, 26, 26, 494, 494)
 
-server = ModularServer(WarehouseModel,
+server = ModularServer(TrafficModel,
                        [grid],
                        "Traffic Simulation",
                        modelParams)

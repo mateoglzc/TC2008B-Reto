@@ -125,7 +125,7 @@ def compatible(road: Road, roadB: Road):
 
             return True
 
-class WarehouseModel(Model):
+class TrafficModel(Model):
     """ Model for Roomba simulation """
     def __init__(self, numCars=11, seed=None):
         self.numCars = numCars
@@ -213,9 +213,6 @@ class WarehouseModel(Model):
 
                 if not containsObstacle:
                     road.realNeighbors.append(n_agent)
-            
-
-            
 
         
         for dst in self.destinations_copy:
