@@ -35,12 +35,13 @@ class Road(Agent):
         
 
 class TrafficLightAgent(Agent):
-    def __init__(self, unique_id, model, state, timeToChange = 10):
+    def __init__(self, unique_id, model, state, direction, timeToChange = 10):
         super().__init__(unique_id, model)
         self.state = state
         self.timeToChange = timeToChange
         self.numSteps = 0
         self.reverse = {"green": "red", "red": "green"}
+        self.direction = direction
     
     def step(self):
         self.numSteps += 1
