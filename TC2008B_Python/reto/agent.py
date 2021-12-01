@@ -138,6 +138,11 @@ class CarAgent(Agent):
             
             
             self.nextPos = self.path[-1]
+            roadA = self.model.grid.get_cell_list_contents(self.pos)[0]
+            roadB = self.model.grid.get_cell_list_contents(self.path[-1])[0]
+            if abs(self.path[-1][0] - self.pos[0]) == 1 and abs(self.path[-1][1] - self.pos[1]) == 1 and roadA.directions != roadB.directions:
+                inter = intermediate[self.model.grid.get_cell_list_contents(self.pos)[0].directions[0]]
+                self.nextPos = (self.pos[0]+inter[0], self.pos[1]+inter[1])
             self.direction = self.getDirection(self.nextPos)
             carInFront = False
             redLight = False
@@ -150,10 +155,7 @@ class CarAgent(Agent):
                     break
             
             if not carInFront and not redLight:
-                roadA = self.model.grid.get_cell_list_contents(self.pos)[0]
-                roadB = self.model.grid.get_cell_list_contents(self.path[-1])[0]
                 if abs(self.path[-1][0] - self.pos[0]) == 1 and abs(self.path[-1][1] - self.pos[1]) == 1 and roadA.directions != roadB.directions:
-                    inter = intermediate[self.model.grid.get_cell_list_contents(self.pos)[0].directions[0]]
                     self.model.grid.move_agent(self, (self.pos[0]+inter[0], self.pos[1]+inter[1]))
                 
                 else:
@@ -164,7 +166,6 @@ class CarAgent(Agent):
             else:
                 self.nextPos = self.pos
         
-        #self.self.nextPos = self.path[-1]
     
 
     def step(self):
