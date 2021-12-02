@@ -95,8 +95,6 @@ public class RetoAPI : MonoBehaviour
                 for (int i = 0; i < carGroup.Length; i++)
                 {
                     carGroup[i].transform.position = Vector3.Lerp(oldPos[i], newPos[i], t);
-                    // carGroup[i].transform.position = newPos[i];
-                    // Debug.Log(carGroup[i].transform.position);
                 }
             }
         }

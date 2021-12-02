@@ -2,8 +2,8 @@ from flask import Flask, jsonify, session, request
 import model
 import os
 
-app = Flask("Windmill")
-app.config['SECRET_KEY'] = "helloImTheSecretBetYouCantCrackMeLalalalalalWazzupNoQueMuyHacker"
+app = Flask("RetoTC2008B")
+app.config['SECRET_KEY'] = "21973489274861289364"
 port = int(os.getenv('PORT', 8000))
 global mdl
 
@@ -16,7 +16,7 @@ def test() -> str:
 def config() -> str:
     """Recieve model configuration and create model"""
     global mdl
-    numCars = int(request.form.get("numCars")) # Error
+    numCars = int(request.form.get("numCars"))
     mdl = model.TrafficModel(numCars)
     return "Configuration Successful"
 

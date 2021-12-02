@@ -54,7 +54,6 @@ class CarAgent(Agent):
         super().__init__(unique_id, model)
         self.direction = 0
         self.destination = destination
-        self.blinkers = [False, False]
         self.numMoves = 0
         self.nextPos = None
         self.path = []
