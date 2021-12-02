@@ -89,21 +89,21 @@ Las etapas fuera del ciclo son la planeación y el lanzamiento del proyecto, y p
   - **Responsable/s:** Equipo de trabajo
   - **Intervalo de esfuerzo estimado:** Intermedio
 
-- [ ] **Desarrollo de sistema multiagente**
+- [x] **Desarrollo de sistema multiagente**
   - **Descripción:** construcción del modelo con los respectivos agentes reactivos
   - **Lapso de tiempo**: 17/11/2021 - 01/12/2021
   - **Fecha esperada:** 01/12/2021
   - **Responsable/s:** Diego, Enrique
   - **Intervalo de esfuerzo estimado:** Alto
 
-- [ ] **Implementación de la nube**
+- [x] **Implementación de la nube**
   - **Descripción:** Conexión del modelo hacia una liga en la nube
   - **Lapso de tiempo**: 17/11/2021 - 01/12/2021
   - **Fecha esperada:** 01/12/2021
   - **Responsable/s:** Enrique, Mateo
   - **Intervalo de esfuerzo estimado:** Intermedio
 
-- [ ] **Visualización de Unity**
+- [x] **Visualización de Unity**
   - **Descripción:** Aplicar gráficas computacionales para la visualización de la simulación
   - **Lapso de tiempo**: 22/11/2021 - 01/12/2021
   - **Fecha esperada:** 01/12/2021
