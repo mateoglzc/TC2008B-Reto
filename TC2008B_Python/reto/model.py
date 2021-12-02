@@ -126,7 +126,7 @@ def compatible(road: Road, roadB: Road):
             return True
 
 class TrafficModel(Model):
-    """ Model for Roomba simulation """
+    """ Model for Traffic simulation """
     def __init__(self, numCars=11, seed=None):
         self.numCars = numCars
         self.running = True # For visualization
@@ -136,13 +136,12 @@ class TrafficModel(Model):
             "Moves": lambda m: {agent.unique_id: agent.numMoves for agent in m.schedule.agents if isinstance(agent, CarAgent)},
             "Total Time": lambda m: time.time() - m.startTime
         })
-        print(self._seed)
         destinations = set()
         trafficLights = set()
         self.allRoads = set()
         dataDictionary = json.load(open("mapDictionary.txt", encoding="utf-8-sig"))
 
-
+        # create model using base1.txt as the template
         with open('base1.txt', encoding="utf-8-sig") as baseFile:
             lines = baseFile.readlines()
             self.width = len(lines[0])-1
@@ -195,7 +194,7 @@ class TrafficModel(Model):
 
 
     def updateNeighbors(self):
-        
+        """Function to calculate the road and destination neighbors not including obstacles"""
         for road in self.allRoads: # iterate through every road tile
             #road.realNeighbors = []
             possible = self.grid.get_neighborhood(road.pos, True, False)
@@ -228,6 +227,7 @@ class TrafficModel(Model):
     
 
     def stopRunning(self):
+        """Function to end simulation and print data collected in the last step of the simulation"""
         self.running = False
         df = self.datacollector.get_model_vars_dataframe()
         
