@@ -33,11 +33,37 @@
 5. Ingresar el comando `conda create --name <nombre_de_ambiente> python=3.8 --file requirements.txt`
 6. Ingresar `conda env list` para verificar que se haya creado correctamente el ambiente
 
+## Instalación de Cloud Foundry CLI
+***Esta herramienta es necesaria para la ejecución del programa para el reto utilizando la nube. Al igual cabe mencionar que para la utilización de esta es necesario contar con una cuenta de IBM Cloud.***
+
+
+1. Dirigirse a la pagina de [Cloud Foundry CLI](https://github.com/cloudfoundry/cli#downloads).
+2. Seleccionar el apartado **"Install V8"**.
+3. Serás redirigido a una pagina en donde se encuentran las direcciones para instalar el programa en diferentes sistemas operativos. Este se puede instalar por medio de una terminal o por medio de un instalador.
+
 ## Ejecución del programa para el reto usando la nube
-1. Abrir la escena de *Unity* contenida en `TC2008B-Reto/TC2008B_Unity/Assets/Reto/Scenes`
-2. En caso de ser necesario, ingresar al objecto *Controller* de la escena y cambiar la variable *url* a `http://retotc2008b-resplendent-lynx-pw.mybluemix.net/`
-3. Presionar el botón de *Play* que se contiene en la parte superior del editor de *Unity* una vez que se abra la escena 
-4. Observar la ejecución de la simulación y pararlo cuando se desee
+1. Instalar la herramienta *Cloud Foundry CLI* y contar con una cuenta de *IBM Cloud*.
+2. Abrir la terminal de preferencia.
+3. Dirigirse al directorio `TC2008B-Reto/TC2008B_Python/reto`.
+4. Ingresar el comando `cf api <API-Endpoint>` sustituyendo *API-Endpoint* por algún *url* presentado en la tabla siguiente.
+
+|URL                             |Region          |
+|:-------------------------------|:---------------|
+| https://api.ng.bluemix.net     | US South       |
+| https://api.eu-de.bluemix.net  | Germany        |
+| https://api.eu-gb.bluemix.net  | United Kingdom |
+| https://api.au-syd.bluemix.net | Sydney         |
+
+5. Esperar a que el proceso se termine.  
+6. Ingresar el comando `cf login`.
+7. Ingresar tu usuario y contraseña de tu cuenta de *IBM Cloud*.
+8. Esperar a que el proceso se termine.
+9. Ingresar el comando `cf push`.
+10. Esto iniciara el proceso despliegue a la nube. Al concluir este proceso se te proporcionara con un enlace semejante a `Retotc2008b-resplendent-lynx-pw.mybluemix.net`. 
+11. Abrir la escena de *Unity* contenida en `TC2008B-Reto/TC2008B_Unity/Assets/Reto/Scenes`
+12. En caso de ser necesario, ingresar al objecto *Controller* de la escena y cambiar la variable *url* a `http://retotc2008b-resplendent-lynx-pw.mybluemix.net/`
+13. Presionar el botón de *Play* que se contiene en la parte superior del editor de *Unity* una vez que se abra la escena 
+14. Observar la ejecución de la simulación y pararlo cuando se desee
 
 ## Ejecución del programa para el reto usando una instancia local
 1. Abrir la terminal de preferencia
