@@ -17,7 +17,8 @@
 1. Dirigirse a la página https://unity3d.com/get-unity/download
 2. Descargar *Unity Hub*
 3. Crear una cuenta de Unity
-4. Descargar la versión de *Unity* 2020.3.22f1
+4. Abrir la liga https://unity3d.com/unity/qa/lts-releases
+5. Descargar la versión de *Unity* 2020.3.22f1 desde la página web
 
 ## Instalación de repositorio
 1. Abrir la terminal de preferencia
