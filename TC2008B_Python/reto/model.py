@@ -136,9 +136,10 @@ class TrafficModel(Model):
             "Moves": lambda m: {agent.unique_id: agent.numMoves for agent in m.schedule.agents if isinstance(agent, CarAgent)},
             "Total Time": lambda m: time.time() - m.startTime
         })
-        destinations = set()
-        trafficLights = set()
+
+        self.destinations = set()
         self.allRoads = set()
+        trafficLights = set()
         dataDictionary = json.load(open("mapDictionary.txt", encoding="utf-8-sig"))
 
         # create model using base1.txt as the template
@@ -173,12 +174,12 @@ class TrafficModel(Model):
                     elif col == "D":
                         agent = Destination(f"d{r*self.width+c}", self)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
-                        destinations.add(agent.pos)
+                        self.destinations.add(agent.pos)
                         self.schedule.add(agent)
         
 
         roads = self.allRoads.copy()
-        self.destinations_copy = destinations.copy()
+        destinations = self.destinations.copy()
         for i in range(numCars):
             dst = self.random.choice(list(destinations)) # choose random destination
             destinations.remove(dst) # remove it from possible destinations
@@ -213,7 +214,7 @@ class TrafficModel(Model):
                 if not containsObstacle:
                     road.realNeighbors.append(n_agent)
         
-        for dst in self.destinations_copy:
+        for dst in self.destinations:
             dst_a = self.grid.get_cell_list_contents(dst)[0]
             possible = self.grid.get_neighborhood(dst, False, False)
             for neighbor in possible:
@@ -251,7 +252,7 @@ class TrafficModel(Model):
         self.datacollector.collect(self)
         
         count = 0
-        for dst in self.destinations_copy:
+        for dst in self.destinations:
             if self.grid.get_cell_list_contents(dst)[0].hasCar:
                 count += 1
 
