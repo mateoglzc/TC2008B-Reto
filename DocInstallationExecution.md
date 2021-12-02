@@ -1,5 +1,13 @@
 # Proceso de instalación y ejecución de solución del reto
 
+## Secciones
+1. [Programas necesarios](#programas-necesarios)
+2. [Instalación de Unity](#instalación-de-unity)
+3. [Instalación de repositorio](#instalación-de-repositorio)
+4. [Instalación de Conda o Miniconda](#instalación-de-conda-o-miniconda)
+5. [Ejecución del programa para el reto usando la nube](#ejecución-del-programa-para-el-reto-usando-la-nube)
+6. [Ejecución del programa para el reto usando una instancia local](#ejecución-del-programa-para-el-reto-usando-una-instancia-local)
+
 ## Programas necesarios
 - Conda o Miniconda (solo necesario si se quieren iniciar instancias locales del proyecto)
 - Unity
