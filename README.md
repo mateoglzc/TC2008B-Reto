@@ -1,5 +1,7 @@
 # TC2008B-Reto
 
+Video de ejecución del reto: https://drive.google.com/file/d/1KQ3QNj7oQlbE_2EtSz8rG97ndOwR_uo7/view?usp=sharing
+
 Carpeta de *Python* contiene carpetas para actividad integradora y reto final
 
 Carpeta de *Assets* de *Unity* contiene carpetas para actividad integradora y reto final
