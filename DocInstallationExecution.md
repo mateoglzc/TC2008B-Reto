@@ -61,8 +61,9 @@
 8. Esto iniciara el proceso despliegue a la nube. Al concluir este proceso se te proporcionara con un enlace semejante a `Retotc2008b-resplendent-lynx-pw.mybluemix.net`. 
 9. Abrir la escena de *Unity* contenida en `TC2008B-Reto/TC2008B_Unity/Assets/Reto/Scenes`
 10. En caso de ser necesario, ingresar al objecto *Controller* de la escena y cambiar la variable *url* a `http://retotc2008b-resplendent-lynx-pw.mybluemix.net/`
-11. Presionar el botón de *Play* que se contiene en la parte superior del editor de *Unity* una vez que se abra la escena 
-12. Observar la ejecución de la simulación y pararlo cuando se desee
+11. En el mismo objecto *Controller*, seleccionar el número de coches que se desea visualizar siendo menor o igual al número de destinos de la ciudad
+12. Presionar el botón de *Play* que se contiene en la parte superior del editor de *Unity* una vez que se abra la escena 
+13. Observar la ejecución de la simulación y pararlo cuando se desee
 
 ## Ejecución del programa para el reto usando una instancia local
 1. Abrir la terminal de preferencia
@@ -72,5 +73,6 @@
 5. Esperar hasta que la instancia de *Flask* este corriendo completamente
 6. Abrir la escena de *Unity* contenida en `TC2008B-Reto/TC2008B_Unity/Assets/Reto/Scenes`
 7. En caso de ser necesario, ingresar al objecto *Controller* de la escena y cambiar la variable *url* a `http://localhost:8000/`
-8. Presionar el botón de *Play* que se contiene en la parte superior del editor de *Unity* una vez que se abra la escena 
-9. Observar la ejecución de la simulación y pararlo cuando se desee
+8. En el mismo objecto *Controller*, seleccionar el número de coches que se desea visualizar siendo menor o igual al número de destinos de la ciudad
+9. Presionar el botón de *Play* que se contiene en la parte superior del editor de *Unity* una vez que se abra la escena 
+10. Observar la ejecución de la simulación y pararlo cuando se desee
