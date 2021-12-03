@@ -180,7 +180,7 @@ class TrafficModel(Model):
 
         roads = self.allRoads.copy()
         destinations = self.destinations.copy()
-        for i in range(numCars):
+        for i in range(self.numCars):
             dst = self.random.choice(list(destinations)) # choose random destination
             destinations.remove(dst) # remove it from possible destinations
             agent = CarAgent(i+1, self, dst) # create car agent with id, model, destination
