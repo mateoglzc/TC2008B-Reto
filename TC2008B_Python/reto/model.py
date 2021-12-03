@@ -128,7 +128,7 @@ def compatible(road: Road, roadB: Road):
 class TrafficModel(Model):
     """ Model for Traffic simulation """
     def __init__(self, numCars=11, seed=None):
-        self.numCars = 11 if numCars > 11 else numCars
+        self.numCars = numCars
         self.running = True # For visualization
         self.startTime = None # For keeping track of time
         self.timeLimit = 180
