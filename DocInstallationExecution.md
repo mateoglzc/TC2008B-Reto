@@ -76,3 +76,9 @@
 8. En el mismo objecto *Controller*, seleccionar el número de coches que se desea visualizar siendo menor o igual al número de destinos de la ciudad
 9. Presionar el botón de *Play* que se contiene en la parte superior del editor de *Unity* una vez que se abra la escena 
 10. Observar la ejecución de la simulación y pararlo cuando se desee
+
+## Variables de desempeño
+- Posición inicial de cada agente
+- Destino final de cada agente
+- Número de movimientos por agente
+- Tiempo utilizado para concluir el modelo
