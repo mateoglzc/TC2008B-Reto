@@ -3,6 +3,8 @@ from mesa.visualization.modules import CanvasGrid, PieChartModule, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
+# Hello comment
+
 directions = {"down": 0, "up": 180, "left": 90, "right": 270}
 
 def agent_portrayal(agent):
